@@ -4,11 +4,11 @@ __pycache__/
 
 # Assets that belong to the `main` branch, not to the site. They sit in the
 # same working tree when you switch branches, so keep them out of here.
-checkpoints/
-sample_data/
-outputs/
-results/
-relight/
+/checkpoints/
+/sample_data/
+/outputs/
+/results/
+/relight/
 *.ckpt
 *.pth
 

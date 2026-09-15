@@ -8,7 +8,7 @@
 (function () {
   'use strict';
 
-  var ASSET_V = '?v=7';
+  var ASSET_V = '?v=8';
 
   var SCENES = [
     { label: 'Cat', key: 'scene29' },
@@ -24,7 +24,7 @@
   var ORBIT_R = 0.4;
   var ORBIT_CY = -0.29;
   var POINT_Z = 0.5;
-  var GAIN = 50.0;                       // render_relight.py --brightness 50
+  var GAIN = 50.0;                       // == render_relight.py --brightness 50
   var FILL = 0.2;                        // dim camera-side fill, not in the paper
 
   var VERT = [
@@ -92,8 +92,10 @@
     '  vec3 color = shade(normalize(u_light), n, albedo, rough, metal);',
     '  color += u_fill * shade(vec3(0.0, 0.0, 1.0), n, albedo, rough, metal);',
     '  color *= u_gain;',
-    '  color = pow(clamp(color, 0.0, 1.0), vec3(1.0 / 2.2));',
-    '  gl_FragColor = vec4(color, 1.0);',
+    // render_relight.py clips the HDR render straight to 8 bit, with no gamma
+    // encoding. Applying one here lifted the shadows and flattened the
+    // materials, so the tone map matches the offline renderer exactly.
+    '  gl_FragColor = vec4(clamp(color, 0.0, 1.0), 1.0);',
     '}'
   ].join('\n');
 

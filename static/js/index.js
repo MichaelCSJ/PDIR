@@ -66,7 +66,7 @@
     });
   }
 
-  var ASSET_V = '?v=7';
+  var ASSET_V = '?v=8';
 
   var SCENES = [
     { label: 'Cat', key: 'scene29' },

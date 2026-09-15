@@ -62,9 +62,11 @@ RGB-X   input  SIGGA2026/rgbx/rgbx_dataset/input_real_valid_white/<safe>/frame_0
 `static/js/relight.js` reproduces `Principled_BRDF.forward`: the light circles
 at radius 0.4 about (0, -0.29, 0) while the shaded point sits at (0, 0, 0.5),
 the incident direction has its y and z flipped, and the diffuse lobe carries the
-Disney retro-reflection term. Checked against `render_relight.py` on scene29 at
-four angles: max 4/255, mean 0.01/255. A dim camera-side fill (0.2) is added on
-top so the shadowed side stays readable; that part is not in the paper.
+Disney retro-reflection term. The shaded values were checked against
+`render_relight.py` on scene29 at four angles: max 4/255, mean 0.01/255. The
+tone map matches too &mdash; clip to [0,1] at gain 50, no gamma encoding, the
+same as `--brightness 50`. A dim camera-side fill (0.2) is added on top so the
+shadowed side stays readable; that part is not in the paper.
 
 Table numbers are transcribed from the paper (Tables 1 and 2 in `7_results.tex`).
 Column headers carry `data-dir="higher"`/`"lower"`, and `static/js/index.js`

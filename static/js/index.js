@@ -1,11 +1,47 @@
-/* PDIR project page — marks the best and second-best entry in each table column.
-   Each <th> carries data-dir="lower" or "higher" to say which way is better. */
+/* Scene viewers and table highlighting. No dependencies. */
 
 (function () {
   'use strict';
 
+  /* -------- paged viewer: arrows + tab buttons swap one or more images -------- */
+  function makeViewer(cfg) {
+    var tabsEl = document.getElementById(cfg.tabs);
+    if (!tabsEl) return;
+
+    var index = 0;
+    var buttons = cfg.items.map(function (item, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'scene-tab';
+      b.textContent = item.label;
+      b.addEventListener('click', function () { go(i); });
+      tabsEl.appendChild(b);
+      return b;
+    });
+
+    function go(i) {
+      index = (i + cfg.items.length) % cfg.items.length;
+      var item = cfg.items[index];
+      Object.keys(cfg.targets).forEach(function (key) {
+        var el = document.getElementById(cfg.targets[key]);
+        if (el) el.src = item[key];
+      });
+      buttons.forEach(function (b, k) {
+        b.classList.toggle('is-active', k === index);
+      });
+      if (cfg.onChange) cfg.onChange(index, item);
+    }
+
+    var prev = document.getElementById(cfg.prev);
+    var next = document.getElementById(cfg.next);
+    if (prev) prev.addEventListener('click', function () { go(index - 1); });
+    if (next) next.addEventListener('click', function () { go(index + 1); });
+
+    go(0);
+  }
+
+  /* ---------------- best / second-best marking ---------------- */
   function highlightTable(table) {
-    if (!table) return;
     var headers = Array.prototype.slice.call(table.querySelectorAll('thead th'));
     var rows = Array.prototype.slice.call(table.querySelectorAll('tbody tr'));
 
@@ -25,19 +61,39 @@
       entries.sort(function (a, b) {
         return dir === 'lower' ? a.val - b.val : b.val - a.val;
       });
-
-      entries[0].cell.style.fontWeight = 'bold';
-      entries[0].cell.style.color = '#d93025';
-
-      /* with only two candidates, "second best" carries no information */
-      if (entries.length > 2) {
-        entries[1].cell.style.fontWeight = 'bold';
-        entries[1].cell.style.textDecoration = 'underline';
-      }
+      entries[0].cell.classList.add('best');
+      if (entries.length > 2) entries[1].cell.classList.add('second');
     });
   }
 
+  var SCENES = [
+    { label: 'Owl', key: 'scene1' },
+    { label: 'Cat', key: 'scene29' },
+    { label: 'Bowl', key: 'scene41' },
+    { label: 'Case', key: 'scene152' }
+  ];
+
   document.addEventListener('DOMContentLoaded', function () {
+    makeViewer({
+      tabs: 'resTabs', prev: 'resPrev', next: 'resNext',
+      targets: { pbr: 'resPbr', relight: 'resRelight' },
+      items: SCENES.map(function (s) {
+        return {
+          label: s.label,
+          pbr: './static/image/results/' + s.key + '_pbr.webp',
+          relight: './static/image/results/' + s.key + '_relight.webp'
+        };
+      })
+    });
+
+    makeViewer({
+      tabs: 'envTabs', prev: 'envPrev', next: 'envNext',
+      targets: { img: 'envImg' },
+      items: [1, 2, 3, 4].map(function (n) {
+        return { label: 'Set ' + n, img: './static/image/envgrid/page' + n + '.webp' };
+      })
+    });
+
     Array.prototype.slice.call(document.querySelectorAll('table.res-table'))
       .forEach(highlightTable);
   });

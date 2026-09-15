@@ -161,38 +161,45 @@ body {
    PDIR project page additions
    ------------------------------------------------------------------ */
 
-.publication-venue {
-  margin-left: auto;
-  margin-right: auto;
+.publication-venue { margin-left: auto; margin-right: auto; }
+
+.content h2 { margin-top: 2.2rem; }
+
+/* tight bullet lists carry the prose */
+ul.tight {
+  margin: 0 0 1.1rem 0;
+  padding-left: 1.15rem;
+  list-style: disc;
+}
+ul.tight li {
+  margin: 0.2rem 0;
+  line-height: 1.55;
+  color: #2b3038;
 }
 
-/* figure captions */
 p.caption {
-  font-size: 14px;
-  line-height: 1.6;
-  color: #5b6470;
-  text-align: left;
-  margin-top: 10px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #6b7280;
+  margin-top: 8px;
 }
 
-/* label above a table */
-p.table-title {
-  font-size: 15px;
-  color: #24292e;
-  text-align: left;
-  margin-top: 26px;
-  margin-bottom: 8px;
+p.panel-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin: 16px 0 6px;
 }
 
-/* light frame around figures */
 .figure-frame {
   border: 1px solid #eaecef;
   border-radius: 8px;
   background: #fff;
-  padding: 8px;
+  padding: 6px;
   overflow: hidden;
 }
-
 .figure-frame img {
   display: block;
   width: 100%;
@@ -200,72 +207,178 @@ p.table-title {
   border-radius: 4px;
 }
 
+/* -------------------------- scene viewers -------------------------- */
+
+.scene-viewer { margin-bottom: 8px; }
+
+.scene-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.scene-arrow {
+  border: 1px solid #d7dbe0;
+  background: #fff;
+  color: #4b5563;
+  border-radius: 999px;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.scene-arrow:hover { background: #f3f4f6; }
+
+.scene-tabs { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+
+.scene-tab {
+  border: 1px solid #d7dbe0;
+  background: #fff;
+  color: #4b5563;
+  border-radius: 999px;
+  padding: 5px 15px;
+  font-size: 13.5px;
+  font-family: inherit;
+  cursor: pointer;
+}
+.scene-tab:hover { background: #f3f4f6; }
+.scene-tab.is-active {
+  background: #24292e;
+  border-color: #24292e;
+  color: #fff;
+}
+
 /* ---------------------------- tables ---------------------------- */
+
+.table-heading {
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: #4b5563;
+  margin: 26px 0 10px;
+}
 
 .res-table-container {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  margin-bottom: 8px;
+  display: flex;
+  justify-content: center;
 }
 
 table.res-table {
-  width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   font-size: 14px;
   line-height: 1.5;
-  min-width: 720px;
+  margin: 0 auto;
+  min-width: 660px;
 }
-
-table.res-table.narrow {
-  min-width: 360px;
-  width: auto;
-}
+table.res-table.narrow { min-width: 480px; }
 
 .res-table th,
 .res-table td {
-  padding: 10px 12px;
-  border-bottom: 1px solid #eaecef;
+  padding: 9px 16px;
   white-space: nowrap;
+  border: none;
 }
 
 .res-table th {
-  background: #fafbfc;
   font-weight: 600;
-  color: #24292e;
-  text-align: left;
-  border-bottom: 2px solid #eaecef;
-}
-
-.res-table tbody tr:nth-child(odd) {
-  background: #fcfcfd;
-}
-
-.res-table tbody tr:hover {
-  background: #f6f8fa;
-}
-
-.res-table td.num {
+  font-size: 12.5px;
+  letter-spacing: 0.02em;
+  color: #6b7280;
   text-align: right;
-  font-variant-numeric: tabular-nums;
+  border-bottom: 1px solid #d7dbe0;
 }
+.res-table th:first-child { text-align: left; }
 
-/* our row */
-.res-table tbody tr.ours,
-.res-table tbody tr.ours:nth-child(odd) {
-  background: #fff8e1;
-}
+.res-table td { border-bottom: 1px solid #f0f2f4; color: #2b3038; }
+.res-table tbody tr:last-child td { border-bottom: none; }
+.res-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
 
-.res-table tbody tr.ours:hover {
-  background: #fff3cd;
+.res-table tbody tr.ours td {
+  background: #fff8e6;
+  font-weight: 600;
 }
+.res-table tbody tr.ours td:first-child { border-radius: 6px 0 0 6px; }
+.res-table tbody tr.ours td:last-child { border-radius: 0 6px 6px 0; }
 
-/* multi-shot reference row, set apart from the single-shot block */
-.res-table tbody tr.sep td {
-  border-top: 2px solid #eaecef;
-}
+.res-table tbody tr.sep td { border-top: 1px solid #d7dbe0; color: #6b7280; }
+
+.res-table td.best { color: #c02a1d; font-weight: 700; }
+.res-table td.second { text-decoration: underline; }
 
 @media (max-width: 640px) {
   table.res-table { font-size: 13px; }
   .res-table th, .res-table td { padding: 8px 10px; }
+}
+
+/* ------------------------ interactive relighting ------------------------ */
+
+.relight-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 18px;
+  align-items: start;
+  border: 1px solid #eaecef;
+  border-radius: 8px;
+  padding: 12px;
+  background: #fff;
+}
+
+.relight-stage {
+  background: #0e0f12;
+  border-radius: 6px;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+}
+.relight-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+.relight-stage canvas:active { cursor: grabbing; }
+
+.relight-fallback {
+  color: #9ca3af;
+  font-size: 14px;
+  padding: 24px;
+  text-align: center;
+}
+
+.relight-controls { display: flex; flex-direction: column; gap: 14px; }
+.relight-controls .scene-tabs { justify-content: flex-start; }
+
+.relight-slider { display: block; }
+.relight-slider span {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+.relight-slider input { width: 100%; }
+
+@media (max-width: 768px) {
+  .relight-panel { grid-template-columns: 1fr; }
+}
+
+/* --------------------------- placeholder --------------------------- */
+
+.placeholder-slot {
+  border: 1px dashed #d7dbe0;
+  border-radius: 8px;
+  background: #fbfbfc;
+  color: #9ca3af;
+  font-size: 14px;
+  text-align: center;
+  padding: 72px 16px;
 }

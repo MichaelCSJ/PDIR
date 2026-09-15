@@ -29,29 +29,27 @@ python -m http.server 8000
 Settings → Pages → *Deploy from a branch* → branch `project_page`, folder `/ (root)`.
 `.nojekyll` is present so GitHub serves the files as-is.
 
-## Figures
+## Figures and interactive parts
 
-Every figure is the camera-ready figure from the paper, rasterized from
-`figures/*.pdf` in the ACM submission bundle (`tog456-article201.zip`) at about
-twice its display width and saved as WebP (quality 88). To regenerate after a
-figure changes:
+Paper figures (teaser, imaging system, network overview, pBRDF expansion) are
+rasterized from `figures/*.pdf` in the ACM submission bundle with PyMuPDF at
+about twice their display width and saved as WebP (quality 88).
 
-```python
-import pymupdf, io
-from PIL import Image
+The results, environment-lighting and relighting sections are built from
+inference outputs rather than the paper:
 
-doc = pymupdf.open("figures/teaser.pdf")
-page = doc[0]
-zoom = 2000 / page.rect.width          # target pixel width
-pix = page.get_pixmap(matrix=pymupdf.Matrix(zoom, zoom), alpha=False)
-Image.open(io.BytesIO(pix.tobytes("png"))).convert("RGB") \
-     .save("static/image/teaser.webp", "WEBP", quality=88, method=6)
-```
+| Asset | Built from |
+|---|---|
+| `static/image/results/<scene>_pbr.webp` | `inference.py` output for the four demo scenes |
+| `static/image/results/<scene>_relight.webp` | `outputs/render_12pat_5method_bright_crop`, pattern `AntiDiag` |
+| `static/image/envgrid/page*.webp` | `outputs/render_env_3scene_5method_xflip`, with mirror balls from its `_chromeballs` |
+| `static/webgl/<scene>_{albedo,normal,mat}.png` | the same `maps.npz`; `mat` packs roughness, metallicity and mask into R, G, B |
 
-Target widths in use: teaser and dynamic_face 2000, overview 1900,
-imaging_system / pbrdf_expansion / ablation 1800, albedo / metallic /
-rotating_light / env_map 1600, comparison / expand_data 1500.
+`static/js/relight.js` shades those textures live in WebGL with the paper's
+principled BRDF (GGX + Smith + Schlick, `F0 = 0.08(1-m) + albedo*m`), lit by one
+orbiting key light plus a dim camera-side fill so the shadowed side stays
+readable.
 
-Table numbers are transcribed from the paper (Tables 1–4 in `7_results.tex`).
+Table numbers are transcribed from the paper (Tables 1 and 2 in `7_results.tex`).
 Column headers carry `data-dir="higher"`/`"lower"`, and `static/js/index.js`
 marks the best and second-best value in each column from that.

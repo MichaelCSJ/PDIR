@@ -22,8 +22,7 @@ import tarfile
 import urllib.request
 from pathlib import Path
 
-# TODO: point this at the published repository.
-DEFAULT_REPO = "SeokjunChoi/PDIR"
+DEFAULT_REPO = "SeokjunChoi/snapshot-polarimetric-dir"
 
 WEIGHTS = "pdir_best.ckpt"
 SAMPLES = "sample_data.tar.gz"

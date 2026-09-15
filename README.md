@@ -16,7 +16,8 @@
 
 [Project page](https://michaelcsj.github.io/PDIR/) ·
 [arXiv](https://arxiv.org/abs/2605.24915) ·
-[Paper](https://arxiv.org/pdf/2605.24915)
+[Paper](https://arxiv.org/pdf/2605.24915) ·
+[Weights & samples](https://huggingface.co/SeokjunChoi/snapshot-polarimetric-dir)
 
 </div>
 
@@ -45,8 +46,9 @@ The code was developed against PyTorch 2.4 / CUDA 12.4 on NVIDIA A6000 GPUs.
 
 ## Quick start
 
-Pretrained weights and five sample captures are published separately, because
-the checkpoint is 329 MB:
+Pretrained weights and five sample captures live on
+[Hugging Face](https://huggingface.co/SeokjunChoi/snapshot-polarimetric-dir),
+because the checkpoint is 329 MB:
 
 ```bash
 python download_assets.py
@@ -207,6 +209,7 @@ play.
 
 ```
 download_assets.py          fetches the weights and sample captures
+upload_assets.py            publishes them (maintainers only)
 train.py                    training entrypoint
 inference.py                inference entrypoint
 render_relight.py           rotating-light relighting of the estimated maps

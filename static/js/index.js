@@ -40,6 +40,34 @@
     go(0);
   }
 
+  /* -------- two independent axes selecting one image between them -------- */
+  function makeAxisViewer(cfg) {
+    var img = document.getElementById(cfg.target);
+    if (!img) return;
+    var picked = cfg.axes.map(function () { return 0; });
+
+    var buttons = cfg.axes.map(function (axis, ai) {
+      var host = document.getElementById(axis.tabs);
+      return axis.labels.map(function (label, i) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'scene-tab';
+        b.textContent = label;
+        b.addEventListener('click', function () { picked[ai] = i; update(); });
+        host.appendChild(b);
+        return b;
+      });
+    });
+
+    function update() {
+      img.src = cfg.src.apply(null, picked);
+      buttons.forEach(function (row, ai) {
+        row.forEach(function (b, i) { b.classList.toggle('is-active', picked[ai] === i); });
+      });
+    }
+    update();
+  }
+
   /* ---------------- best / second-best marking ---------------- */
   function highlightTable(table) {
     var headers = Array.prototype.slice.call(table.querySelectorAll('thead th'));
@@ -66,7 +94,7 @@
     });
   }
 
-  var ASSET_V = '?v=10';
+  var ASSET_V = '?v=11';
 
   var SCENES = [
     { label: 'Cat', key: 'scene29' },
@@ -89,12 +117,15 @@
       })
     });
 
-    makeViewer({
-      tabs: 'envTabs', prev: 'envPrev', next: 'envNext',
-      targets: { img: 'envImg' },
-      items: [1, 2, 3, 4, 5, 6].map(function (n) {
-        return { label: 'Set ' + n, img: './static/image/envgrid/page' + n + '.webp' };
-      })
+    makeAxisViewer({
+      target: 'envImg',
+      axes: [
+        { tabs: 'envObjTabs', labels: ['Set 1', 'Set 2', 'Set 3'] },
+        { tabs: 'envLightTabs', labels: ['Set 1', 'Set 2', 'Set 3'] }
+      ],
+      src: function (o, l) {
+        return './static/image/envgrid/o' + (o + 1) + '_l' + (l + 1) + '.webp' + ASSET_V;
+      }
     });
 
     Array.prototype.slice.call(document.querySelectorAll('table.res-table'))

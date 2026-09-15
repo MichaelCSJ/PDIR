@@ -254,6 +254,23 @@ p.panel-title {
 
 .scene-tabs { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
 
+.axis-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.axis-label {
+  min-width: 72px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
 .scene-tab {
   border: 1px solid #d7dbe0;
   background: #fff;

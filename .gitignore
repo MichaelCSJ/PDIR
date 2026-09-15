@@ -1,3 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Assets that belong to the `main` branch, not to the site. They sit in the
+# same working tree when you switch branches, so keep them out of here.
+checkpoints/
+sample_data/
+outputs/
+results/
+relight/
+*.ckpt
+*.pth
+
 # OS / NAS junk
 .DS_Store
 Thumbs.db

@@ -8,7 +8,7 @@
 (function () {
   'use strict';
 
-  var ASSET_V = '?v=4';
+  var ASSET_V = '?v=5';
 
   var SCENES = [
     { label: 'Cat', key: 'scene29' },

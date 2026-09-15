@@ -207,6 +207,24 @@ p.panel-title {
   border-radius: 4px;
 }
 
+/* The comparison panels are 1102 px tall and vary in width with the object.
+   Pinning the displayed height keeps every scene the same size on the page and
+   downscales the source instead of stretching it, which keeps it sharp. */
+.pbr-frame {
+  display: flex;
+  justify-content: center;
+}
+.pbr-frame img {
+  width: auto;
+  height: 560px;
+}
+@media (max-width: 768px) {
+  .pbr-frame img { height: 430px; }
+}
+@media (max-width: 480px) {
+  .pbr-frame img { height: 330px; }
+}
+
 /* -------------------------- scene viewers -------------------------- */
 
 .scene-viewer { margin-bottom: 8px; }
@@ -369,4 +387,15 @@ table.res-table.narrow { min-width: 480px; }
   font-size: 14px;
   text-align: center;
   padding: 72px 16px;
+}
+
+/* ------------------------------ TL;DR ------------------------------ */
+
+p.tldr {
+  max-width: 44rem;
+  margin: 0 auto 1.4rem;
+  text-align: center;
+  font-size: 17px;
+  line-height: 1.6;
+  color: #2b3038;
 }

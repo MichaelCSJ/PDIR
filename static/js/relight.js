@@ -9,11 +9,16 @@
   'use strict';
 
   var SCENES = [
-    { label: 'Owl', key: 'scene1' },
     { label: 'Cat', key: 'scene29' },
     { label: 'Bowl', key: 'scene41' },
-    { label: 'Case', key: 'scene152' }
+    { label: 'Case', key: 'scene152' },
+    { label: 'Owl', key: 'scene1' }
   ];
+
+  // The light stays on one orbit; only its azimuth is exposed to the reader.
+  var ELEVATION_DEG = 25;
+  var GAIN = 2.6;
+  var FILL = 0.3;
 
   var VERT = [
     'attribute vec2 a_pos;',
@@ -152,16 +157,15 @@
     var uFill = gl.getUniformLocation(program, 'u_fill');
 
     var angleEl = document.getElementById('relightAngle');
-    var elevEl = document.getElementById('relightElev');
-    var gainEl = document.getElementById('relightGain');
+    var el = ELEVATION_DEG * Math.PI / 180;
+    var cosEl = Math.cos(el);
+    var sinEl = Math.max(Math.sin(el), 0.05);
 
     function draw() {
       var az = (parseFloat(angleEl.value) || 0) * Math.PI / 180;
-      var el = (parseFloat(elevEl.value) || 0) * Math.PI / 180;
-      var cos = Math.cos(el);
-      gl.uniform3f(uLight, Math.cos(az) * cos, Math.sin(az) * cos, Math.max(Math.sin(el), 0.05));
-      gl.uniform1f(uGain, (parseFloat(gainEl.value) || 100) / 100);
-      gl.uniform1f(uFill, 0.3);
+      gl.uniform3f(uLight, Math.cos(az) * cosEl, Math.sin(az) * cosEl, sinEl);
+      gl.uniform1f(uGain, GAIN);
+      gl.uniform1f(uFill, FILL);
       gl.viewport(0, 0, canvas.width, canvas.height);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
@@ -195,9 +199,7 @@
       loadScene(SCENES[i].key);
     }
 
-    [angleEl, elevEl, gainEl].forEach(function (el) {
-      el.addEventListener('input', draw);
-    });
+    angleEl.addEventListener('input', draw);
 
     /* dragging the canvas moves the light */
     var dragging = false;

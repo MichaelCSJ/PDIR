@@ -320,22 +320,26 @@ table.res-table.narrow { min-width: 480px; }
 
 /* ------------------------ interactive relighting ------------------------ */
 
+/* The maps are 384 px square; showing them much larger than half that just
+   magnifies interpolation, so the stage is capped well below native size. */
 .relight-panel {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 260px;
-  gap: 18px;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
   border: 1px solid #eaecef;
   border-radius: 8px;
-  padding: 12px;
+  padding: 16px;
   background: #fff;
 }
 
 .relight-stage {
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 1 / 1;
   background: #0e0f12;
   border-radius: 6px;
   overflow: hidden;
-  aspect-ratio: 1 / 1;
 }
 .relight-stage canvas {
   display: block;
@@ -352,24 +356,8 @@ table.res-table.narrow { min-width: 480px; }
   text-align: center;
 }
 
-.relight-controls { display: flex; flex-direction: column; gap: 14px; }
-.relight-controls .scene-tabs { justify-content: flex-start; }
-
-.relight-slider { display: block; }
-.relight-slider span {
-  display: block;
-  font-size: 12.5px;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  color: #6b7280;
-  margin-bottom: 4px;
-}
+.relight-slider { width: 100%; max-width: 340px; }
 .relight-slider input { width: 100%; }
-
-@media (max-width: 768px) {
-  .relight-panel { grid-template-columns: 1fr; }
-}
 
 /* --------------------------- placeholder --------------------------- */
 
@@ -381,4 +369,27 @@ table.res-table.narrow { min-width: 480px; }
   font-size: 14px;
   text-align: center;
   padding: 72px 16px;
+}
+
+/* ------------------------- snapshot input row ------------------------- */
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 10px 0 4px;
+}
+.input-row .panel-title { margin: 0; }
+.input-shot {
+  flex: none;
+  border: 1px solid #eaecef;
+  border-radius: 6px;
+  background: #000;
+  padding: 4px;
+}
+.input-shot img {
+  display: block;
+  height: 104px;
+  width: auto;
+  border-radius: 3px;
 }

@@ -42,9 +42,7 @@
           </div>
 
           <div class="is-size-5 publication-authors">
-            <span class="author-block">
-              <sup>1</sup>POSTECH &nbsp; <sup>2</sup>Meta
-            </span>
+            <span class="author-block"><sup>1</sup>POSTECH &nbsp; <sup>2</sup>Meta</span>
           </div>
           <div class="is-size-7 publication-authors">
             <span class="author-block"><sup>*</sup>Equal contribution</span>
@@ -59,22 +57,19 @@
               <span class="link-block">
                 <a href="https://arxiv.org/pdf/2605.24915"
                    class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                  <span>Paper</span>
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span><span>Paper</span>
                 </a>
               </span>
               <span class="link-block">
                 <a href="https://arxiv.org/abs/2605.24915"
                    class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon"><i class="fas fa-book-open"></i></span>
-                  <span>arXiv</span>
+                  <span class="icon"><i class="fas fa-book-open"></i></span><span>arXiv</span>
                 </a>
               </span>
               <span class="link-block">
                 <a href="https://github.com/MichaelCSJ/PDIR"
                    class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon"><i class="fab fa-github"></i></span>
-                  <span>Code</span>
+                  <span class="icon"><i class="fab fa-github"></i></span><span>Code</span>
                 </a>
               </span>
             </div>
@@ -89,10 +84,7 @@
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="hero-body">
-      <div class="figure-frame">
-        <img src="./static/image/teaser.webp" alt="Teaser">
-      </div>
-      <p class="caption">One shot &rarr; nine color-polarimetric measurements &rarr; PBR maps &rarr; relighting.</p>
+      <div class="figure-frame"><img src="./static/image/teaser.webp" alt="Teaser"></div>
     </div>
   </div>
 </section>
@@ -101,65 +93,20 @@
 <div class="container is-max-desktop">
 <div class="content">
 
-  <!-- ===================== Abstract ===================== -->
-  <h2>Abstract</h2>
-  <p class="has-text-justified">
-    Inverse rendering remains a core challenge in graphics and vision, especially in the snapshot configurations
-    required for lightweight desktop workflows, where the per-frame information budget is highly constrained.
-    Previous inverse rendering work explores various available dimensions for enriching the per-shot information,
-    including temporal modulation, spectral encoding, and polarization. In this work, we introduce
-    <strong>polarimetric display inverse rendering</strong>, using an LCD to project a linearly polarized RGB binary
-    pattern and an RGB polarization camera augmented with a quarter-wave plate to acquire color-polarimetric
-    measurements in a single shot. A feed-forward transformer maps these measurements to per-pixel normal, albedo,
-    roughness, and metallicity. To overcome training data scarcity, we expand a limited set of measured polarimetric
-    bidirectional reflectance distribution functions via a generative manifold. Evaluations on a real desktop setup
-    demonstrate accurate inverse rendering across diverse scenes, outperforming existing approaches.
-  </p>
-
-  <!-- ===================== Imaging system ===================== -->
-  <h2>Imaging system</h2>
+  <!-- ===================== TL;DR ===================== -->
+  <h2>TL;DR</h2>
   <ul class="tight">
-    <li>An LCD is already a polarized emitter &mdash; no polarizing optics on the illumination side.</li>
-    <li>RGB binary pattern: right half &rarr; R, left half &rarr; G, upper half &rarr; B. Three lighting directions in one shot.</li>
-    <li>A quarter-wave plate on the lens trades <em>S</em><sub>2</sub> for <em>S</em><sub>3</sub>, making circular polarization measurable.</li>
-    <li>Per channel: unpolarized = <em>S</em><sub>0</sub>&minus;<em>S</em><sub>1</sub>, LP = &minus;<em>S</em><sub>1</sub>, CP = <em>S</em><sub>3</sub>/<em>S</em><sub>0</sub>. Three channels &times; three states = <strong>nine measurements</strong>.</li>
+    <li>A monitor lights the scene; one polarization-camera exposure is all we capture.</li>
+    <li>That single shot carries three lighting directions <em>and</em> three polarization states &mdash; nine measurements.</li>
+    <li>A feed-forward transformer turns them into normal, albedo, roughness and metallicity.</li>
+    <li>No time multiplexing, so moving subjects work too.</li>
   </ul>
-  <div class="figure-frame">
-    <img src="./static/image/imaging_system.webp" alt="Display-camera imaging system">
-  </div>
-
-  <!-- ===================== Method ===================== -->
-  <h2>Feed-forward inverse rendering</h2>
-  <ul class="tight">
-    <li>The nine measurements enter an encoder&ndash;decoder transformer as a token sequence.</li>
-    <li>Attention alternates over space, spectral channel, polarization state and frames.</li>
-    <li>One forward pass &rarr; normal, albedo, roughness, metallicity.</li>
-  </ul>
-  <div class="figure-frame">
-    <img src="./static/image/overview.webp" alt="Network overview">
-  </div>
-
-  <!-- ===================== Dataset ===================== -->
-  <h2>Expanded pBRDF dataset</h2>
-  <ul class="tight">
-    <li>Measured pBRDFs are compressed to a PCA basis.</li>
-    <li>A generator samples PCA weights conditioned on PBR parameters &rarr; 2,000 physically valid pBRDFs.</li>
-    <li>Assigned to Objaverse geometry and rendered in Mitsuba 3 &rarr; 12k training scenes.</li>
-  </ul>
-  <div class="columns is-centered">
-    <div class="column is-three-fifths">
-      <div class="figure-frame"><img src="./static/image/expand_data.webp" alt="pBRDF expansion pipeline"></div>
-    </div>
-  </div>
-  <div class="figure-frame">
-    <img src="./static/image/pbrdf_expansion.webp" alt="Synthesized pBRDF instances">
-  </div>
 
   <!-- ===================== Results ===================== -->
   <h2>Results</h2>
   <ul class="tight">
-    <li>Estimated maps come from a single capture; the relighting row uses a display pattern held out from training.</li>
-    <li>Baselines receive white-illumination input, since they do not assume spectral multiplexing.</li>
+    <li>Baselines get white-illumination input, since they do not assume spectral multiplexing.</li>
+    <li>The relighting row uses a display pattern held out from training.</li>
   </ul>
 
   <div class="scene-viewer" id="resultViewer">
@@ -173,14 +120,20 @@
       </button>
     </div>
 
+    <div class="input-row">
+      <div class="input-shot">
+        <img id="resInput" src="./static/image/results/scene29_input.webp" alt="Snapshot input">
+      </div>
+      <p class="panel-title">Snapshot input &mdash; one exposure under the RGB binary pattern</p>
+    </div>
+
     <p class="panel-title">Estimated PBR maps</p>
-    <div class="figure-frame"><img id="resPbr" src="./static/image/results/scene1_pbr.webp" alt="Estimated PBR maps"></div>
+    <div class="figure-frame"><img id="resPbr" src="./static/image/results/scene29_pbr.webp" alt="Estimated PBR maps"></div>
 
     <p class="panel-title">Relighting under a held-out display pattern</p>
-    <div class="figure-frame"><img id="resRelight" src="./static/image/results/scene1_relight.webp" alt="Relighting comparison"></div>
+    <div class="figure-frame"><img id="resRelight" src="./static/image/results/scene29_relight.webp" alt="Relighting comparison"></div>
   </div>
 
-  <!-- ===================== Tables ===================== -->
   <h3 class="table-heading">Synthetic benchmark</h3>
   <div class="res-table-container">
     <table class="res-table" id="synthTable">
@@ -229,29 +182,18 @@
   <!-- ===================== Interactive relighting ===================== -->
   <h2>Move the light</h2>
   <ul class="tight">
-    <li>Rendered live in your browser from the estimated maps &mdash; drag the canvas or the slider.</li>
+    <li>Shaded live in your browser from the estimated maps &mdash; drag the image or the slider.</li>
   </ul>
 
   <div class="relight-panel" id="relightPanel">
+    <div class="scene-tabs" id="relightTabs"></div>
     <div class="relight-stage">
-      <canvas id="relightCanvas" width="512" height="512"></canvas>
+      <canvas id="relightCanvas" width="384" height="384"></canvas>
       <div class="relight-fallback" id="relightFallback" hidden>WebGL is unavailable in this browser.</div>
     </div>
-    <div class="relight-controls">
-      <div class="scene-tabs" id="relightTabs"></div>
-      <label class="relight-slider">
-        <span>Light angle</span>
-        <input type="range" id="relightAngle" min="0" max="360" value="45" step="1">
-      </label>
-      <label class="relight-slider">
-        <span>Elevation</span>
-        <input type="range" id="relightElev" min="-60" max="75" value="25" step="1">
-      </label>
-      <label class="relight-slider">
-        <span>Exposure</span>
-        <input type="range" id="relightGain" min="60" max="600" value="260" step="1">
-      </label>
-    </div>
+    <label class="relight-slider">
+      <input type="range" id="relightAngle" min="0" max="360" value="45" step="1">
+    </label>
   </div>
 
   <!-- ===================== Environment lighting ===================== -->
@@ -276,9 +218,57 @@
   <!-- ===================== Dynamic scenes ===================== -->
   <h2>Dynamic scenes</h2>
   <ul class="tight">
-    <li>Snapshot capture means every frame is reconstructed independently &mdash; no temporal alignment.</li>
+    <li>Every frame is reconstructed independently &mdash; no temporal alignment.</li>
   </ul>
   <div class="placeholder-slot">Video coming soon</div>
+
+  <!-- ===================== Abstract ===================== -->
+  <h2>Abstract</h2>
+  <p class="has-text-justified">
+    Inverse rendering remains a core challenge in graphics and vision, especially in the snapshot configurations
+    required for lightweight desktop workflows, where the per-frame information budget is highly constrained.
+    Previous inverse rendering work explores various available dimensions for enriching the per-shot information,
+    including temporal modulation, spectral encoding, and polarization. In this work, we introduce
+    <strong>polarimetric display inverse rendering</strong>, using an LCD to project a linearly polarized RGB binary
+    pattern and an RGB polarization camera augmented with a quarter-wave plate to acquire color-polarimetric
+    measurements in a single shot. A feed-forward transformer maps these measurements to per-pixel normal, albedo,
+    roughness, and metallicity. To overcome training data scarcity, we expand a limited set of measured polarimetric
+    bidirectional reflectance distribution functions via a generative manifold. Evaluations on a real desktop setup
+    demonstrate accurate inverse rendering across diverse scenes, outperforming existing approaches.
+  </p>
+
+  <!-- ===================== Imaging system ===================== -->
+  <h2>Imaging system</h2>
+  <ul class="tight">
+    <li>An LCD is already a polarized emitter &mdash; no polarizing optics on the illumination side.</li>
+    <li>RGB binary pattern: right half &rarr; R, left half &rarr; G, upper half &rarr; B. Three lighting directions in one shot.</li>
+    <li>A quarter-wave plate on the lens trades <em>S</em><sub>2</sub> for <em>S</em><sub>3</sub>, making circular polarization measurable.</li>
+    <li>Per channel: unpolarized = <em>S</em><sub>0</sub>&minus;<em>S</em><sub>1</sub>, LP = &minus;<em>S</em><sub>1</sub>, CP = <em>S</em><sub>3</sub>/<em>S</em><sub>0</sub>.</li>
+  </ul>
+  <div class="figure-frame"><img src="./static/image/imaging_system.webp" alt="Display-camera imaging system"></div>
+
+  <!-- ===================== Method ===================== -->
+  <h2>Feed-forward inverse rendering</h2>
+  <ul class="tight">
+    <li>The nine measurements enter an encoder&ndash;decoder transformer as a token sequence.</li>
+    <li>Attention alternates over space, spectral channel, polarization state and frames.</li>
+    <li>One forward pass &rarr; normal, albedo, roughness, metallicity.</li>
+  </ul>
+  <div class="figure-frame"><img src="./static/image/overview.webp" alt="Network overview"></div>
+
+  <!-- ===================== Dataset ===================== -->
+  <h2>Expanded pBRDF dataset</h2>
+  <ul class="tight">
+    <li>Measured pBRDFs are compressed to a PCA basis.</li>
+    <li>A generator samples PCA weights conditioned on PBR parameters &rarr; 2,000 physically valid pBRDFs.</li>
+    <li>Assigned to Objaverse geometry and rendered in Mitsuba 3 &rarr; 12k training scenes.</li>
+  </ul>
+  <div class="columns is-centered">
+    <div class="column is-three-fifths">
+      <div class="figure-frame"><img src="./static/image/expand_data.webp" alt="pBRDF expansion pipeline"></div>
+    </div>
+  </div>
+  <div class="figure-frame"><img src="./static/image/pbrdf_expansion.webp" alt="Synthesized pBRDF instances"></div>
 
   <!-- ===================== Citation ===================== -->
   <h2 id="citation">Citation</h2>

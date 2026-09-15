@@ -67,19 +67,20 @@
   }
 
   var SCENES = [
-    { label: 'Owl', key: 'scene1' },
     { label: 'Cat', key: 'scene29' },
     { label: 'Bowl', key: 'scene41' },
-    { label: 'Case', key: 'scene152' }
+    { label: 'Case', key: 'scene152' },
+    { label: 'Owl', key: 'scene1' }
   ];
 
   document.addEventListener('DOMContentLoaded', function () {
     makeViewer({
       tabs: 'resTabs', prev: 'resPrev', next: 'resNext',
-      targets: { pbr: 'resPbr', relight: 'resRelight' },
+      targets: { input: 'resInput', pbr: 'resPbr', relight: 'resRelight' },
       items: SCENES.map(function (s) {
         return {
           label: s.label,
+          input: './static/image/results/' + s.key + '_input.webp',
           pbr: './static/image/results/' + s.key + '_pbr.webp',
           relight: './static/image/results/' + s.key + '_relight.webp'
         };

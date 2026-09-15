@@ -11,13 +11,13 @@
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
         rel="stylesheet">
 
-  <link rel="stylesheet" href="./static/css/bulma.min.css?v=9">
+  <link rel="stylesheet" href="./static/css/bulma.min.css?v=10">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-  <link rel="stylesheet" href="./static/css/index.css?v=9">
+  <link rel="stylesheet" href="./static/css/index.css?v=10">
 
-  <script defer src="./static/js/fontawesome.all.min.js?v=9"></script>
-  <script defer src="./static/js/index.js?v=9"></script>
-  <script defer src="./static/js/relight.js?v=9"></script>
+  <script defer src="./static/js/fontawesome.all.min.js?v=10"></script>
+  <script defer src="./static/js/index.js?v=10"></script>
+  <script defer src="./static/js/relight.js?v=10"></script>
 </head>
 <body>
 
@@ -93,7 +93,7 @@
           reflectance data.
         </p>
       </div>
-      <div class="figure-frame"><img src="./static/image/teaser.webp?v=9" alt="Teaser"></div>
+      <div class="figure-frame"><img src="./static/image/teaser.webp?v=10" alt="Teaser"></div>
     </div>
   </div>
 </section>
@@ -117,10 +117,10 @@
     </div>
 
     <p class="panel-title">Estimated PBR maps</p>
-    <div class="figure-frame pbr-frame"><img id="resPbr" src="./static/image/results/scene29_pbr.webp?v=9" alt="Estimated PBR maps"></div>
+    <div class="figure-frame pbr-frame"><img id="resPbr" src="./static/image/results/scene29_pbr.webp?v=10" alt="Estimated PBR maps"></div>
 
     <p class="panel-title">Relighting under a held-out display pattern</p>
-    <div class="figure-frame"><img id="resRelight" src="./static/image/results/scene29_relight.webp?v=9" alt="Relighting comparison"></div>
+    <div class="figure-frame"><img id="resRelight" src="./static/image/results/scene29_relight.webp?v=10" alt="Relighting comparison"></div>
   </div>
 
   <!-- ===================== Interactive relighting ===================== -->
@@ -148,19 +148,19 @@
         <span class="icon"><i class="fas fa-chevron-right"></i></span>
       </button>
     </div>
-    <div class="figure-frame"><img id="envImg" src="./static/image/envgrid/page1.webp?v=9" alt="Environment relighting grid"></div>
+    <div class="figure-frame"><img id="envImg" src="./static/image/envgrid/page1.webp?v=10" alt="Environment relighting grid"></div>
   </div>
 
   <!-- ===================== Dynamic scene ===================== -->
   <h2>Dynamic scene</h2>
   <div class="video-pair">
     <figure>
-      <video src="./static/video/dynamic_capture.mp4?v=9" autoplay loop muted playsinline></video>
-      <figcaption>Captured frames</figcaption>
+      <video src="./static/video/dynamic_capture.mp4?v=10" autoplay loop muted playsinline></video>
+      <figcaption>Capture</figcaption>
     </figure>
     <figure>
-      <video src="./static/video/dynamic_relit.mp4?v=9" autoplay loop muted playsinline></video>
-      <figcaption>Relit from per-frame inverse rendering</figcaption>
+      <video src="./static/video/dynamic_relit.mp4?v=10" autoplay loop muted playsinline></video>
+      <figcaption>Relit, frame by frame</figcaption>
     </figure>
   </div>
 
@@ -172,7 +172,7 @@
     <li>A quarter-wave plate on the lens trades <em>S</em><sub>2</sub> for <em>S</em><sub>3</sub>, making circular polarization measurable.</li>
     <li>Per channel: unpolarized = <em>S</em><sub>0</sub>&minus;<em>S</em><sub>1</sub>, LP = &minus;<em>S</em><sub>1</sub>, CP = <em>S</em><sub>3</sub>/<em>S</em><sub>0</sub>.</li>
   </ul>
-  <div class="figure-frame"><img src="./static/image/imaging_system.webp?v=9" alt="Display-camera imaging system"></div>
+  <div class="figure-frame"><img src="./static/image/imaging_system.webp?v=10" alt="Display-camera imaging system"></div>
 
   <!-- ===================== Method ===================== -->
   <h2>Feed-forward inverse rendering</h2>
@@ -181,7 +181,7 @@
     <li>Attention alternates over space, spectral channel, polarization state and frames.</li>
     <li>One forward pass &rarr; normal, albedo, roughness, metallicity.</li>
   </ul>
-  <div class="figure-frame"><img src="./static/image/overview.webp?v=9" alt="Network overview"></div>
+  <div class="figure-frame"><img src="./static/image/overview.webp?v=10" alt="Network overview"></div>
 
   <!-- ===================== Dataset ===================== -->
   <h2>Expanded pBRDF dataset</h2>
@@ -192,10 +192,10 @@
   </ul>
   <div class="columns is-centered">
     <div class="column is-three-fifths">
-      <div class="figure-frame"><img src="./static/image/expand_data.webp?v=9" alt="pBRDF expansion pipeline"></div>
+      <div class="figure-frame"><img src="./static/image/expand_data.webp?v=10" alt="pBRDF expansion pipeline"></div>
     </div>
   </div>
-  <div class="figure-frame"><img src="./static/image/pbrdf_expansion.webp?v=9" alt="Synthesized pBRDF instances"></div>
+  <div class="figure-frame"><img src="./static/image/pbrdf_expansion.webp?v=10" alt="Synthesized pBRDF instances"></div>
 
   <!-- ===================== Citation ===================== -->
   <h2 id="citation">Citation</h2>

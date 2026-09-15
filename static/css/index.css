@@ -384,6 +384,10 @@ table.res-table.narrow { min-width: 480px; }
   grid-template-columns: 1fr 1fr;
   gap: 14px;
   align-items: start;
+  /* the sources are 384 px square; keep each tile near that instead of
+     stretching it across the full text column */
+  max-width: 800px;
+  margin: 0 auto;
 }
 .video-pair figure {
   margin: 0;
@@ -398,7 +402,9 @@ table.res-table.narrow { min-width: 480px; }
 }
 .video-pair figcaption {
   margin-top: 7px;
+  min-height: 1.4em;          /* one line either way, so the pair stays aligned */
   font-size: 13.5px;
+  line-height: 1.4;
   color: #6b7280;
   text-align: center;
 }

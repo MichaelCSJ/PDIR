@@ -379,6 +379,33 @@ table.res-table.narrow { min-width: 480px; }
 
 /* --------------------------- placeholder --------------------------- */
 
+.video-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  align-items: start;
+}
+.video-pair figure {
+  margin: 0;
+}
+.video-pair video {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #000;
+  border: 1px solid #eaecef;
+  border-radius: 8px;
+}
+.video-pair figcaption {
+  margin-top: 7px;
+  font-size: 13.5px;
+  color: #6b7280;
+  text-align: center;
+}
+@media (max-width: 560px) {
+  .video-pair { grid-template-columns: 1fr; }
+}
+
 .placeholder-slot {
   border: 1px dashed #d7dbe0;
   border-radius: 8px;

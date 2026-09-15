@@ -238,7 +238,7 @@ def main():
 
     if not args.no_pretrained:
         source = args.init_ckpt or LINO_PBR_URL
-        sd = adapt_state_dict(load_state_dict(source, Path("checkpoint")))
+        sd = adapt_state_dict(load_state_dict(source, Path("checkpoints")))
         missing, unexpected = net.load_state_dict(sd, strict=False)
         print(f"[ckpt] init from {source}: missing={len(missing)} unexpected={len(unexpected)}")
 

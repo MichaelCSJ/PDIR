@@ -95,16 +95,18 @@ inside the model, so the same checkpoint reads synthetic and real captures.
   ...
 ```
 
-**Real captures** (`--dataset real`), one directory per scene:
+**Real captures** (`--dataset real`), one directory per scene. Any directory
+holding these files counts as a scene, so readable names work as well as the
+capture ids:
 
 ```
 <real-root>/
-  scene0_.../
+  cat/
     quad{0,1,2,3}_main_hdr_s0.npy    [H, W, 3]  total intensity, >= 0
     quad{0,1,2,3}_main_hdr_s1.npy    [H, W, 3]  linear polarization, signed
     quad{0,1,2,3}_main_hdr_s2.npy    [H, W, 3]  circular polarization, signed
     mask.png                         uint8, 0/255
-  scene1_.../
+  bowl/
   ...
 ```
 
@@ -140,8 +142,11 @@ Things worth knowing before a long run:
 - `--image-size` must be exactly twice `--canonical-resolution`. Defaults are
   384 / 192.
 - Unless you pass `--no-pretrained`, training initialises from the LINO-PBR
-  weights, downloaded once into `checkpoint/`. Use `--init-ckpt` to start from
+  weights, downloaded once into `checkpoints/`. Use `--init-ckpt` to start from
   your own checkpoint instead.
+- `--pattern-color-strength` defaults to 0.80, the calibrated value. The
+  released `pdir_best` was trained at 1.0, so pass that to reproduce it &mdash;
+  and match whatever you choose at inference time.
 - The real loss ramps in as a staircase: zero for the first
   `--real-warmup-stair-steps` steps, then one step up per block until it reaches
   full weight after `--real-warmup-stairs` blocks. While the weight is zero the
@@ -167,8 +172,9 @@ For every scene this writes `<out-dir>/<scene>/`:
 | `normal.png`, `albedo.png`, `roughness.png`, `metallic.png` | 8-bit previews |
 | `maps.npz` | float32 arrays: `normal` (HW3, in [-1,1]), `albedo` (HW3), `roughness` (HW1), `metallic` (HW1), `mask` (HW) |
 
-Use `--dataset synth` to run the same checkpoint over synthetic scenes.
-Full-resolution images are processed in tiles of `--patch-size` pixels.
+Use `--dataset synth` to run the same checkpoint over synthetic scenes. Images
+are processed in one tile by default; `--patch-size` splits them instead, and
+must divide `--image-size`.
 
 Two flags must match the values the checkpoint was trained with, or the encoder
 sees a different input distribution than it learned on:

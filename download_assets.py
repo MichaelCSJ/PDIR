@@ -18,6 +18,7 @@ places.
 """
 
 import argparse
+import sys
 import tarfile
 import urllib.request
 from pathlib import Path
@@ -47,6 +48,7 @@ def download(url: str, dest: Path) -> None:
     print(f"[get] {url}")
     with urllib.request.urlopen(url) as response, open(tmp, "wb") as out:
         total = int(response.headers.get("Content-Length") or 0)
+        show = total and sys.stdout.isatty()     # a redirected log does not want 300 lines
         done = 0
         while True:
             chunk = response.read(1 << 20)
@@ -54,9 +56,9 @@ def download(url: str, dest: Path) -> None:
                 break
             out.write(chunk)
             done += len(chunk)
-            if total:
+            if show:
                 print(f"\r      {done/1e6:7.1f} / {total/1e6:.1f} MB", end="", flush=True)
-        if total:
+        if show:
             print()
     tmp.replace(dest)
     print(f"[ok]  {dest}")

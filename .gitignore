@@ -12,7 +12,6 @@ sample_data/
 outputs/
 results/
 relight/
-checkpoint/
 *.ckpt
 *.pth
 

@@ -10,3 +10,8 @@ einops==0.8.1
 opencv-python==4.10.0.84
 Pillow==11.2.1
 PyWavelets==1.8.0
+
+# Optional: H.264 video output in render_relight.py. Without it the script
+# falls back to OpenCV's MPEG-4 encoder.
+imageio==2.37.2
+imageio-ffmpeg==0.6.0

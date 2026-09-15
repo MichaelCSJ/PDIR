@@ -131,16 +131,52 @@ For every scene this writes `<out-dir>/<scene>/`:
 | File | Contents |
 |---|---|
 | `normal.png`, `albedo.png`, `roughness.png`, `metallic.png` | 8-bit previews |
-| `maps.npz` | float32 arrays: `normal` (HW3, in [-1,1]), `albedo` (HW3), `roughness` (HW1), `metallic` (HW1) |
+| `maps.npz` | float32 arrays: `normal` (HW3, in [-1,1]), `albedo` (HW3), `roughness` (HW1), `metallic` (HW1), `mask` (HW) |
 
 Use `--dataset synth` to run the same checkpoint over synthetic scenes.
 Full-resolution images are processed in tiles of `--patch-size` pixels.
+
+Two flags must match the values the checkpoint was trained with, or the encoder
+sees a different input distribution than it learned on:
+
+| Flag | Meaning |
+|---|---|
+| `--exposure-norm` | per-scene HDR exposure normalisation for real captures |
+| `--pattern-color-strength` | RGB cross-talk calibration; 1.0 disables it |
+
+## Relighting
+
+The estimated maps are directly renderable. `render_relight.py` orbits a point
+light around a scene and renders one frame per step through the same principled
+BRDF the training render loss uses:
+
+```bash
+python render_relight.py --maps-dir results --out-dir relight
+```
+
+That writes `relight/<scene>/frame####.png` and `relight/<scene>.mp4` for every
+scene under `--maps-dir`. Useful options:
+
+| Flag | Default | Meaning |
+|---|---|---|
+| `--scenes` | all | render only the named scenes |
+| `--n-frames` / `--fps` | 60 / 20 | orbit steps and video frame rate |
+| `--radius` / `--center` | 0.4 / `0 -0.29 0` | orbit geometry, in the display calibration's units |
+| `--brightness` | 50 | exposure applied to the HDR render before clipping |
+| `--no-video` | off | write frames only |
+
+`--brightness` is a single global exposure, so scenes with dark albedo or high
+metallicity come out dimmer than others; raise it per scene if a render looks
+too dark. H.264 video needs `imageio-ffmpeg` (see `requirements.txt`); without
+it the script falls back to OpenCV's MPEG-4 encoder, which most browsers cannot
+play.
 
 ## Repository layout
 
 ```
 train.py                    training entrypoint
 inference.py                inference entrypoint
+render_relight.py           rotating-light relighting of the estimated maps
 calibration/                calibrated LCD emitter positions used by the renderer
 src/io/                     synthetic and real dataset loaders
 src/lightning/module.py     LightningModule: losses, joint co-training, optimizer

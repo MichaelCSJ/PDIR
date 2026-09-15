@@ -66,12 +66,13 @@
     });
   }
 
-  var ASSET_V = '?v=6';
+  var ASSET_V = '?v=7';
 
   var SCENES = [
     { label: 'Cat', key: 'scene29' },
     { label: 'Bowl', key: 'scene41' },
     { label: 'Case', key: 'scene152' },
+    { label: 'Foil', key: 'scene130' },
     { label: 'Owl', key: 'scene1' }
   ];
 

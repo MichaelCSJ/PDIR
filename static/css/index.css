@@ -213,16 +213,16 @@ p.panel-title {
 .pbr-frame {
   display: flex;
   justify-content: center;
+  /* wider than the text column: the flattest object (foil) is 1.74:1, and at a
+     shared height that needs more than the 960 px the prose sits in */
+  width: min(1180px, 94vw);
+  margin-left: 50%;
+  transform: translateX(-50%);
 }
+/* One height for every scene, capped so the widest still fits the frame. */
 .pbr-frame img {
   width: auto;
-  height: 728px;
-}
-@media (max-width: 768px) {
-  .pbr-frame img { height: 560px; }
-}
-@media (max-width: 480px) {
-  .pbr-frame img { height: 400px; }
+  height: min(640px, 52vw);
 }
 
 /* -------------------------- scene viewers -------------------------- */

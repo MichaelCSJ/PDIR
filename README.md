@@ -41,7 +41,7 @@ file under the same name.
 
 | Asset | Built from |
 |---|---|
-| `image/results/<scene>_pbr.webp` | modalities down the rows, methods across; row 0 is each method's own preprocessed input, shown with a display-only exposure (ours x0.78, baselines x1.5) so the columns are comparable &mdash; estimated maps are untouched. Fixed source height (1102 px), width follows the object; the page pins the displayed height so every scene renders the same size |
+| `image/results/<scene>_pbr.webp` | methods down the rows, modalities across; column 0 is each method's own preprocessed input, exposed to a common foreground mean so the column is comparable &mdash; ours is solved in the linear HDR domain before the gamma, and estimated maps are untouched. Fixed source height (888 px), width follows the object; the page pins one displayed height for every scene and lets the figure run wider than the text column so the flattest object still fits |
 | `image/results/<scene>_relight.webp` | `PDIR/outputs/render_12pat_5method_bright_crop`, pattern `AntiDiag` |
 | `image/envgrid/page*.webp` | 13 objects x 16 environments, `fg_gain=2.7`, mirror ball top-right from `render_env_3scene_5method_xflip/_chromeballs` |
 | `webgl/<scene>_{albedo,normal,mat}.png` | `pipeline_vanila_valid_final` maps; `mat` packs roughness, metallicity and mask into R, G, B |

@@ -1,0 +1,9 @@
+# OS / NAS junk
+.DS_Store
+Thumbs.db
+@eaDir/
+*@SynoEAStream
+
+# editors
+.vscode/
+.idea/

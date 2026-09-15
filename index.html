@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Snapshot Polarimetric Display Inverse Rendering: per-pixel normal, albedo, roughness and metallicity from a single color-polarimetric capture on a display-camera desktop setup.">
+  <meta name="keywords" content="inverse rendering, polarization imaging, reflectance modeling, computational photography, physically based rendering, SIGGRAPH Asia 2026">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Snapshot Polarimetric Display Inverse Rendering</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <link rel="stylesheet" href="./static/css/index.css">
+
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script defer src="./static/js/index.js"></script>
+</head>
+<body>
+
+<!-- ===================== Header ===================== -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">Snapshot Polarimetric Display Inverse Rendering</h1>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://michaelcsj.github.io/">Seokjun Choi</a><sup>1*</sup>,
+              <a href="https://yunseong0518.github.io/">Yunseong Moon</a><sup>1*</sup>,
+              <a href="https://cocoakang.cn/">Kaizhang Kang</a><sup>1</sup>,
+              <a href="https://sites.google.com/view/hoongyu-chung/home">Hoon-Gyu Chung</a><sup>1</sup>,
+              <a href="https://divisonofficer.github.io/">Jin-Nyeong Kim</a><sup>1</sup>,
+              <a href="https://giljoonam.github.io/">Giljoo Nam</a><sup>2</sup>,
+              <a href="https://www.shbaek.com/">Seung-Hwan Baek</a><sup>1</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <sup>1</sup>POSTECH &nbsp; <sup>2</sup>Meta
+            </span>
+          </div>
+          <div class="is-size-7 publication-authors">
+            <span class="author-block"><sup>*</sup>Equal contribution</span>
+          </div>
+
+          <div class="is-size-5 publication-venue" style="margin: 0.8rem auto 0 auto;">
+            ACM Transactions on Graphics (Proc. SIGGRAPH Asia 2026), Kuala Lumpur, Malaysia
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- Paper -->
+              <span class="link-block">
+                <a href="https://arxiv.org/pdf/2605.24915"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <!-- arXiv -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2605.24915"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-book-open"></i></span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Code -->
+              <span class="link-block">
+                <a href="https://github.com/MichaelCSJ/PDIR"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fab fa-github"></i></span>
+                  <span>Code</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== Teaser ===================== -->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <div class="figure-frame">
+        <img src="./static/image/teaser.webp" alt="Teaser: display-camera setup, nine color-polarimetric measurements, and relighting results">
+      </div>
+      <p class="caption">
+        We present a snapshot feed-forward inverse rendering method that leverages color-polarimetric reflectance cues.
+        A simple display&ndash;camera setup (a) captures a single-shot image, which (b) is decomposed into nine
+        measurements encoding three RGB lighting directions and three polarization states: unpolarized,
+        linearly polarized (LP), and circularly polarized (CP). From these measurements, our network (c) predicts
+        PBR maps that enable robust relighting under diverse illumination conditions.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 0;">
+<div class="container is-max-desktop">
+<div class="content has-text-justified">
+
+  <!-- ===================== Abstract ===================== -->
+  <h2>Abstract</h2>
+  <p>
+    Inverse rendering remains a core challenge in graphics and vision, especially in the snapshot configurations
+    required for lightweight desktop workflows, where the per-frame information budget is highly constrained.
+    Previous inverse rendering work explores various available dimensions for enriching the per-shot information,
+    including temporal modulation, spectral encoding, and polarization. In this work, we introduce
+    <strong>polarimetric display inverse rendering</strong>, using an LCD to project a linearly polarized RGB binary
+    pattern and an RGB polarization camera augmented with a quarter-wave plate to acquire color-polarimetric
+    measurements in a single shot. A feed-forward transformer maps these measurements to per-pixel normal, albedo,
+    roughness, and metallicity. To overcome training data scarcity, we expand a limited set of measured polarimetric
+    bidirectional reflectance distribution functions via a generative manifold. Evaluations on a real desktop setup
+    demonstrate accurate inverse rendering across diverse scenes, outperforming existing approaches.
+  </p>
+
+  <!-- ===================== Imaging system ===================== -->
+  <h2>Imaging system</h2>
+  <p>
+    An LCD emits linearly polarized light by construction, so it doubles as a programmable spatial light source and a
+    polarized illuminator with no extra optics on the illumination side. We display an RGB binary pattern: the right
+    half of the monitor drives the red channel, the left half the green channel, and the upper half the blue channel,
+    giving cyan, magenta, green and red regions that probe the scene from three lighting directions at once.
+    On the sensor side, a polarization camera alone recovers only linear Stokes components, so we mount a
+    quarter-wave plate in front of the lens, which trades <em>S</em><sub>2</sub> for <em>S</em><sub>3</sub> and makes
+    circular polarization measurable in the same shot.
+  </p>
+  <div class="figure-frame">
+    <img src="./static/image/imaging_system.webp" alt="Display-camera imaging system">
+  </div>
+  <p class="caption">
+    <b>Display&ndash;camera imaging system.</b> (a) Polarizers are mounted on both the illumination and the sensor,
+    enabling polarimetric imaging. (b) The illumination pattern encodes distinct shading cues across the RGB channels.
+    (c) A captured image decomposed into unpolarized, linearly polarized (LP), and circularly polarized (CP) components.
+  </p>
+  <p>
+    For each spectral channel the raw capture is decomposed into three cues:
+    <em>I</em><sub>unpol</sub> = <em>S</em><sub>0</sub> &minus; <em>S</em><sub>1</sub> (diffuse dominant),
+    <em>I</em><sub>LP</sub> = &minus;<em>S</em><sub>1</sub> (specular sensitive), and
+    <em>I</em><sub>CP</sub> = <em>S</em><sub>3</sub>/(<em>S</em><sub>0</sub>+&epsilon;) (a dielectric&ndash;metal cue).
+    Three channels times three polarization states give the nine measurement maps that the network consumes.
+  </p>
+
+  <!-- ===================== Method ===================== -->
+  <h2>Feed-forward inverse rendering</h2>
+  <div class="figure-frame">
+    <img src="./static/image/overview.webp" alt="Overview of the feed-forward inverse rendering network">
+  </div>
+  <p class="caption">
+    <b>Overview of feed-forward inverse rendering.</b> Our framework takes a single spectro-polarimetrically encoded
+    RAW image as input and decomposes it into nine measurements spanning RGB lighting directions and polarization
+    states. An encoder&ndash;decoder transformer then estimates PBR parameter maps in a feed-forward manner.
+  </p>
+
+  <!-- ===================== Dataset ===================== -->
+  <h2>Expanded polarimetric BRDF dataset</h2>
+  <p>
+    Measured pBRDFs are scarce. We represent them in a compact PCA basis, learn a generative manifold over the PCA
+    coefficients conditioned on PBR parameters, and sample new physically valid pBRDFs from it &mdash; 2,000 instances
+    after filtering with the Givens&ndash;Kostinski and Cloude criteria. These are assigned to Objaverse geometry and
+    rendered in Mitsuba 3, yielding 12k training scenes.
+  </p>
+  <div class="columns is-centered">
+    <div class="column is-three-fifths">
+      <div class="figure-frame">
+        <img src="./static/image/expand_data.webp" alt="Expanded pBRDF dataset generation pipeline">
+      </div>
+    </div>
+  </div>
+  <p class="caption">
+    <b>Overview of the expanded pBRDF dataset generation pipeline.</b> (a) Principal components and corresponding
+    weights are extracted from a measured pBRDF dataset via PCA, separately for intensity and polarimetric components.
+    (b) A weight generator is trained to predict PCA weights conditioned on input PBR parameters. (c) After training,
+    the generator samples weights from randomly sampled PBR parameters, and synthetic pBRDFs are reconstructed using
+    the precomputed principal components from (a).
+  </p>
+  <div class="figure-frame">
+    <img src="./static/image/pbrdf_expansion.webp" alt="Rendered examples of synthesized pBRDFs">
+  </div>
+  <p class="caption">
+    <b>Expanded pBRDF instances.</b> Rendered examples of synthesized pBRDFs showing diverse reflectance.
+    (a) RGB appearance under unpolarized illumination. (b) Polarimetric rendering visualized as AoLP, DoP and CoP.
+    (c) PBR parameter maps fitted to each synthesized pBRDF and used as ground-truth supervision during training.
+  </p>
+
+  <!-- ===================== Results: tables ===================== -->
+  <h2>Quantitative results</h2>
+  <p>
+    We compare against LINO-PBR (the inverse rendering variant of LINO-UniPS), DiffusionRenderer, and RGB-X.
+    These methods do not assume spectral multiplexing, so they receive images under white illumination.
+    LINO-PBR additionally supports multiple inputs; its four-light setting is listed separately as a multi-shot
+    reference. Scale-invariant metrics (&ldquo;si-&rdquo;) are computed after aligning the prediction to the
+    reference with a single global intensity scale.
+  </p>
+
+  <p class="table-title"><b>Synthetic dataset.</b> Ground-truth PBR maps available.</p>
+  <div class="res-table-container">
+    <table class="res-table" id="synthTable">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th data-dir="higher">Albedo PSNR &uarr;</th>
+          <th data-dir="lower">Albedo LPIPS &darr;</th>
+          <th data-dir="higher">Albedo si-PSNR &uarr;</th>
+          <th data-dir="lower">Albedo si-LPIPS &darr;</th>
+          <th data-dir="lower">Roughness RMSE &darr;</th>
+          <th data-dir="lower">Metallicity RMSE &darr;</th>
+          <th data-dir="lower">Normal MAE &darr;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>DiffusionRenderer</td>
+          <td class="num">13.03</td><td class="num">0.4039</td><td class="num">17.61</td><td class="num">0.3557</td>
+          <td class="num">0.6999</td><td class="num">0.6317</td><td class="num">29.73</td>
+        </tr>
+        <tr>
+          <td>RGB-X</td>
+          <td class="num">4.75</td><td class="num">0.4884</td><td class="num">18.89</td><td class="num">0.3199</td>
+          <td class="num">0.3596</td><td class="num">0.5529</td><td class="num">40.47</td>
+        </tr>
+        <tr>
+          <td>LINO-PBR (<i>N</i> = 1)</td>
+          <td class="num">14.80</td><td class="num">0.4446</td><td class="num">16.56</td><td class="num">0.4175</td>
+          <td class="num">0.6658</td><td class="num">0.6476</td><td class="num">35.64</td>
+        </tr>
+        <tr class="ours">
+          <td><b>Ours</b></td>
+          <td class="num">23.90</td><td class="num">0.1788</td><td class="num">24.48</td><td class="num">0.1736</td>
+          <td class="num">0.0781</td><td class="num">0.2395</td><td class="num">11.45</td>
+        </tr>
+        <tr class="sep">
+          <td>LINO-PBR (<i>N</i> = 4)<sup>&dagger;</sup></td>
+          <td class="num">15.60</td><td class="num">0.3708</td><td class="num">17.77</td><td class="num">0.3422</td>
+          <td class="num">0.3746</td><td class="num">0.5843</td><td class="num">18.23</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="caption">
+    <sup>&dagger;</sup> Four-shot input, shown for reference. Best in red bold, second best underlined.
+  </p>
+
+  <p class="table-title"><b>Real data.</b> Reconstruction error between the observation and the re-render from the
+  estimated PBR maps, averaged over 12 target patterns.</p>
+  <div class="res-table-container">
+    <table class="res-table" id="realTable">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th data-dir="higher">si-PSNR &uarr;</th>
+          <th data-dir="lower">si-LPIPS &darr;</th>
+          <th data-dir="lower">si-RMSE &darr;</th>
+          <th data-dir="lower">si-MSE &darr;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>DiffusionRenderer</td>
+          <td class="num">16.31</td><td class="num">0.2729</td><td class="num">0.1652</td><td class="num">0.0318</td>
+        </tr>
+        <tr>
+          <td>RGB-X</td>
+          <td class="num">12.75</td><td class="num">0.4121</td><td class="num">0.2428</td><td class="num">0.0651</td>
+        </tr>
+        <tr>
+          <td>LINO-PBR (<i>N</i> = 1)</td>
+          <td class="num">19.16</td><td class="num">0.1949</td><td class="num">0.1220</td><td class="num">0.0186</td>
+        </tr>
+        <tr class="ours">
+          <td><b>Ours</b></td>
+          <td class="num">20.15</td><td class="num">0.1690</td><td class="num">0.1050</td><td class="num">0.0126</td>
+        </tr>
+        <tr class="sep">
+          <td>LINO-PBR (<i>N</i> = 4)<sup>&dagger;</sup></td>
+          <td class="num">19.18</td><td class="num">0.1493</td><td class="num">0.1223</td><td class="num">0.0183</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="table-title"><b>Real-world normal accuracy.</b> Mean angular error against structured-light scanner
+  geometry.</p>
+  <div class="res-table-container">
+    <table class="res-table narrow" id="normalTable">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th data-dir="lower">Cat MAE &darr;</th>
+          <th data-dir="lower">Chicken MAE &darr;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>DiffusionRenderer</td><td class="num">25.67&deg;</td><td class="num">38.50&deg;</td></tr>
+        <tr><td>RGB-X</td><td class="num">17.34&deg;</td><td class="num">24.84&deg;</td></tr>
+        <tr><td>LINO-PBR (<i>N</i> = 1)</td><td class="num">20.26&deg;</td><td class="num">26.40&deg;</td></tr>
+        <tr class="ours"><td><b>Ours</b></td><td class="num">14.20&deg;</td><td class="num">20.47&deg;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===================== Comparison figure ===================== -->
+  <h2>Comparison on a real scene</h2>
+  <p>
+    The same observed intensity can be explained by many combinations of albedo, specular reflection, roughness and
+    metallicity, so a method can reproduce the input image while predicting a decomposition that falls apart once the
+    illumination changes. We therefore render the estimated materials both under the known display pattern and under
+    an out-of-distribution point light.
+  </p>
+  <div class="columns is-centered">
+    <div class="column is-three-fifths">
+      <div class="figure-frame">
+        <img src="./static/image/comparison.webp" alt="Comparison of estimated PBR maps and renderings on a real scene">
+      </div>
+    </div>
+  </div>
+  <p class="caption">
+    <b>Comparison on a real scene.</b> All baselines in (b)&ndash;(e) fail to consistently identify the non-metallic
+    ear and necklace. Arrows mark regions where characteristic grazing-angle shading and specular highlights of
+    metallic surfaces are incorrectly baked into the estimated albedo maps.
+  </p>
+
+  <!-- ===================== Disambiguation ===================== -->
+  <h2>Disentangling diffuse, specular and metal</h2>
+  <div class="figure-frame">
+    <img src="./static/image/albedo.webp" alt="Diffuse-specular disambiguation">
+  </div>
+  <p class="caption">
+    <b>Diffuse&ndash;specular disambiguation.</b> The conventional single-image configurations in (b), (c) and (d)
+    lack independently distinguishable illumination components within the captured image and often encode
+    illumination-dependent shading and specular highlights into albedo. The boxed regions indicate the resulting
+    display-dependent specular patterns baked into the albedo estimates, which remain visible in the albedo and
+    diffuse renderings under changed illumination. Our method produces cleaner albedo estimates and a more consistent
+    separation of the diffuse and specular components.
+  </p>
+  <div class="figure-frame">
+    <img src="./static/image/metallic.webp" alt="Dielectric-metallic disambiguation">
+  </div>
+  <p class="caption">
+    <b>Dielectric&ndash;metallic disambiguation.</b> RGB-X and multi-shot LINO-PBR produce visually plausible rendered
+    images but fail to assign consistent metallicity to the metal frame of the case. With the additional CP
+    measurements, our method estimates the metallic region more clearly and consistently.
+  </p>
+
+  <!-- ===================== Ablation ===================== -->
+  <h2>Ablation</h2>
+  <p class="table-title"><b>Input encoding.</b> Each row adds one cue to the previous configuration.</p>
+  <div class="res-table-container">
+    <table class="res-table" id="ablInputTable">
+      <thead>
+        <tr>
+          <th>Variant</th>
+          <th data-dir="higher">Albedo PSNR &uarr;</th>
+          <th data-dir="lower">Roughness RMSE &darr;</th>
+          <th data-dir="lower">Metallicity RMSE &darr;</th>
+          <th data-dir="lower">Normal MAE &darr;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Uniform white illumination</td><td class="num">21.36</td><td class="num">0.1166</td><td class="num">0.3218</td><td class="num">20.08</td></tr>
+        <tr><td>+ Spectral multiplexing</td><td class="num">21.61</td><td class="num">0.1024</td><td class="num">0.3010</td><td class="num">12.45</td></tr>
+        <tr><td>+ Polarization decomposition</td><td class="num">22.22</td><td class="num">0.0889</td><td class="num">0.2889</td><td class="num">11.97</td></tr>
+        <tr class="ours"><td><b>+ CP (ours)</b></td><td class="num">23.90</td><td class="num">0.0781</td><td class="num">0.2395</td><td class="num">11.45</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="caption">
+    Spectral multiplexing carries most of the directional information, cutting normal MAE from 20.08&deg; to 12.45&deg;.
+    Polarization decomposition mainly sharpens albedo and roughness, and the CP cue gives the largest gain in
+    metallicity.
+  </p>
+
+  <p class="table-title"><b>Training reflectance source.</b> Averaged over two held-out test splits.</p>
+  <div class="res-table-container">
+    <table class="res-table" id="ablDataTable">
+      <thead>
+        <tr>
+          <th>Variant</th>
+          <th data-dir="higher">Albedo PSNR &uarr;</th>
+          <th data-dir="lower">Roughness RMSE &darr;</th>
+          <th data-dir="lower">Metallicity RMSE &darr;</th>
+          <th data-dir="lower">Normal MAE &darr;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Analytic pBRDF</td><td class="num">17.14</td><td class="num">0.2044</td><td class="num">0.2885</td><td class="num">14.81</td></tr>
+        <tr class="ours"><td><b>Expanded pBRDF (ours)</b></td><td class="num">18.06</td><td class="num">0.1520</td><td class="num">0.2836</td><td class="num">18.14</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="figure-frame">
+    <img src="./static/image/ablation.webp" alt="Ablation on the expanded pBRDF dataset">
+  </div>
+  <p class="caption">
+    <b>Ablation on the expanded pBRDF dataset.</b> Unlike our measured-pBRDF-based expansion, training on analytic
+    pBRDFs fails to faithfully disentangle real-world light&ndash;material interactions.
+  </p>
+
+  <!-- ===================== Relighting ===================== -->
+  <h2>Relighting</h2>
+  <div class="columns is-centered">
+    <div class="column is-half">
+      <div class="figure-frame">
+        <img src="./static/image/rotating_light.webp" alt="Relighting under a rotating point light">
+      </div>
+      <p class="caption">
+        <b>Relighting under a rotating point light.</b> Highlights smoothly follow the illumination direction, while
+        material appearance remains stable.
+      </p>
+    </div>
+    <div class="column is-half">
+      <div class="figure-frame">
+        <img src="./static/image/env_map.webp" alt="Relighting under environment maps">
+      </div>
+      <p class="caption">
+        <b>Relighting under environment maps.</b> Rendered under environments that differ substantially from the
+        display illumination used during capture. Material identity stays consistent and highlights stay coherently
+        oriented, blending naturally with the composited backgrounds.
+      </p>
+    </div>
+  </div>
+
+  <!-- ===================== Dynamic ===================== -->
+  <h2>Dynamic scenes</h2>
+  <div class="figure-frame">
+    <img src="./static/image/dynamic_face.webp" alt="Relighting a dynamic face sequence">
+  </div>
+  <p class="caption">
+    <b>Relighting a dynamic face sequence.</b> Snapshot acquisition enables frame-wise relighting of dynamic scenes,
+    where multi-frame capture would require temporal alignment or registration under facial motion. We apply our
+    feed-forward pipeline independently to each frame of a non-rigid face sequence and relight the predictions under
+    environment illumination. The results maintain consistent reflectance across motion and varying illumination.
+  </p>
+
+  <!-- ===================== Citation ===================== -->
+  <h2 id="citation">Citation</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@article{choi2026snapshot,
+  title     = {Snapshot Polarimetric Display Inverse Rendering},
+  author    = {Choi, Seokjun and Moon, Yunseong and Kang, Kaizhang and Chung, Hoon-Gyu
+               and Kim, Jin-Nyeong and Nam, Giljoo and Baek, Seung-Hwan},
+  journal   = {ACM Transactions on Graphics},
+  volume    = {45},
+  number    = {6},
+  articleno = {201},
+  year      = {2026},
+  doi       = {10.1145/3842531}
+}
+</code></pre></div></div>
+
+</div>
+</div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content has-text-centered">
+          <p>
+            Website template borrowed from
+            <a href="https://github.com/nerfies/nerfies.github.io">NeRFies</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -66,7 +66,7 @@
     });
   }
 
-  var ASSET_V = '?v=3';
+  var ASSET_V = '?v=4';
 
   var SCENES = [
     { label: 'Cat', key: 'scene29' },
@@ -91,7 +91,7 @@
     makeViewer({
       tabs: 'envTabs', prev: 'envPrev', next: 'envNext',
       targets: { img: 'envImg' },
-      items: [1, 2, 3, 4].map(function (n) {
+      items: [1, 2, 3, 4, 5, 6].map(function (n) {
         return { label: 'Set ' + n, img: './static/image/envgrid/page' + n + '.webp' };
       })
     });

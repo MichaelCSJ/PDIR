@@ -8,19 +8,24 @@
 (function () {
   'use strict';
 
-  var ASSET_V = '?v=3';
+  var ASSET_V = '?v=4';
 
   var SCENES = [
     { label: 'Cat', key: 'scene29' },
     { label: 'Bowl', key: 'scene41' },
     { label: 'Case', key: 'scene152' },
+    { label: 'Foil', key: 'scene130' },
     { label: 'Owl', key: 'scene1' }
   ];
 
-  // The light stays on one orbit; only its azimuth is exposed to the reader.
-  var ELEVATION_DEG = 25;
-  var GAIN = 2.6;
-  var FILL = 0.3;
+  // Same point-light orbit as render_relight.py: the light circles at radius
+  // ORBIT_R about (0, ORBIT_CY, 0) while the shaded point sits at (0, 0, 0.5),
+  // and Principled_BRDF flips the y and z axes of the incident direction.
+  var ORBIT_R = 0.4;
+  var ORBIT_CY = -0.29;
+  var POINT_Z = 0.5;
+  var GAIN = 50.0;                       // render_relight.py --brightness 50
+  var FILL = 0.2;                        // dim camera-side fill, not in the paper
 
   var VERT = [
     'attribute vec2 a_pos;',
@@ -52,19 +57,24 @@
     '  return 1.0 / max(ndotx + sqrt(a2 + (1.0 - a2) * ndotx * ndotx), 1e-7);',
     '}',
     '',
+    // Mirrors Principled_BRDF.forward: Disney retro-reflective diffuse, GGX
+    // specular, Schlick Fresnel, and the renderer's own 0.12 output scale.
     'vec3 shade(vec3 l, vec3 n, vec3 albedo, float rough, float metal) {',
     '  vec3 v = vec3(0.0, 0.0, 1.0);',
     '  vec3 h = normalize(l + v);',
-    '  float ndotl = max(dot(n, l), 0.0);',
-    '  float ndotv = max(dot(n, v), 1e-4);',
-    '  float ndoth = max(dot(n, h), 0.0);',
-    '  float ldoth = max(dot(l, h), 0.0);',
+    '  float ndotl = clamp(dot(n, l), 0.0, 1.0);',
+    '  float ndotv = clamp(dot(n, v), 1e-4, 1.0);',
+    '  float ndoth = clamp(dot(n, h), 0.0, 1.0);',
+    '  float ldoth = clamp(dot(l, h), 0.0, 1.0);',
     '  float a = rough * rough;',
     '  vec3 f0 = vec3(0.08) * (1.0 - metal) + albedo * metal;',
     '  vec3 fres = f0 + (1.0 - f0) * pow(1.0 - ldoth, 5.0);',
     '  vec3 spec = fres * ggx(ndoth, a) * smithG(ndotl, a) * smithG(ndotv, a);',
-    '  vec3 diff = (1.0 - metal) * albedo / PI;',
-    '  return (diff + spec) * ndotl;',
+    '  float fd90 = 0.5 + 2.0 * ldoth * ldoth * rough;',
+    '  float fd = (1.0 + (fd90 - 1.0) * pow(1.0 - ndotl, 5.0)) *',
+    '             (1.0 + (fd90 - 1.0) * pow(1.0 - ndotv, 5.0));',
+    '  vec3 diff = (1.0 - metal) * (albedo / PI) * fd;',
+    '  return (diff + spec) * ndotl * 0.12;',
     '}',
     '',
     'void main() {',
@@ -74,7 +84,7 @@
     '',
     '  vec3 albedo = texture2D(u_albedo, v_uv).rgb;',
     '  vec3 n = normalize(texture2D(u_normal, v_uv).rgb * 2.0 - 1.0);',
-    '  float rough = clamp(mat.r, 0.05, 1.0);',
+    '  float rough = clamp(mat.r, 0.02, 1.0);',
     '  float metal = clamp(mat.g, 0.0, 1.0);',
     '',
     '  // key light on the orbit, plus a dim fill from the camera so the',
@@ -164,13 +174,18 @@
       if (fallback) fallback.hidden = false;
       return;
     }
-    var el = ELEVATION_DEG * Math.PI / 180;
-    var cosEl = Math.cos(el);
-    var sinEl = Math.max(Math.sin(el), 0.05);
+
+    function lightDir(thetaRad) {
+      var dx = ORBIT_R * Math.cos(thetaRad);
+      var dy = ORBIT_CY + ORBIT_R * Math.sin(thetaRad);
+      var dz = -POINT_Z;
+      var n = Math.sqrt(dx*dx + dy*dy + dz*dz);
+      return [dx / n, -dy / n, -dz / n];   // y, z flipped, as the renderer does
+    }
 
     function draw() {
-      var az = (parseFloat(angleEl.value) || 0) * Math.PI / 180;
-      gl.uniform3f(uLight, Math.cos(az) * cosEl, Math.sin(az) * cosEl, sinEl);
+      var l = lightDir((parseFloat(angleEl.value) || 0) * Math.PI / 180);
+      gl.uniform3f(uLight, l[0], l[1], l[2]);
       gl.uniform1f(uGain, GAIN);
       gl.uniform1f(uFill, FILL);
       gl.viewport(0, 0, canvas.width, canvas.height);

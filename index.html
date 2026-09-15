@@ -11,13 +11,13 @@
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
         rel="stylesheet">
 
-  <link rel="stylesheet" href="./static/css/bulma.min.css?v=3">
+  <link rel="stylesheet" href="./static/css/bulma.min.css?v=4">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-  <link rel="stylesheet" href="./static/css/index.css?v=3">
+  <link rel="stylesheet" href="./static/css/index.css?v=4">
 
-  <script defer src="./static/js/fontawesome.all.min.js?v=3"></script>
-  <script defer src="./static/js/index.js?v=3"></script>
-  <script defer src="./static/js/relight.js?v=3"></script>
+  <script defer src="./static/js/fontawesome.all.min.js?v=4"></script>
+  <script defer src="./static/js/index.js?v=4"></script>
+  <script defer src="./static/js/relight.js?v=4"></script>
 </head>
 <body>
 
@@ -84,7 +84,7 @@
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="hero-body">
-      <div class="figure-frame"><img src="./static/image/teaser.webp?v=3" alt="Teaser"></div>
+      <div class="figure-frame"><img src="./static/image/teaser.webp?v=4" alt="Teaser"></div>
     </div>
   </div>
 </section>
@@ -105,7 +105,7 @@
   <!-- ===================== Results ===================== -->
   <h2>Results</h2>
   <ul class="tight">
-    <li>Baselines get white-illumination input, since they do not assume spectral multiplexing.</li>
+    <li>Each column shows a method's own input: ours is the single RGB-pattern shot, the baselines get white illumination.</li>
     <li>The relighting row uses a display pattern held out from training.</li>
   </ul>
 
@@ -121,10 +121,10 @@
     </div>
 
     <p class="panel-title">Estimated PBR maps</p>
-    <div class="figure-frame"><img id="resPbr" src="./static/image/results/scene29_pbr.webp?v=3" alt="Estimated PBR maps"></div>
+    <div class="figure-frame"><img id="resPbr" src="./static/image/results/scene29_pbr.webp?v=4" alt="Estimated PBR maps"></div>
 
     <p class="panel-title">Relighting under a held-out display pattern</p>
-    <div class="figure-frame"><img id="resRelight" src="./static/image/results/scene29_relight.webp?v=3" alt="Relighting comparison"></div>
+    <div class="figure-frame"><img id="resRelight" src="./static/image/results/scene29_relight.webp?v=4" alt="Relighting comparison"></div>
   </div>
 
   <h3 class="table-heading">Synthetic benchmark</h3>
@@ -176,6 +176,7 @@
   <h2>Move the light</h2>
   <ul class="tight">
     <li>Shaded live in your browser from the estimated maps &mdash; drag the image or the slider.</li>
+    <li>Same point-light orbit and BRDF as our offline renderer, plus a dim camera-side fill.</li>
   </ul>
 
   <div class="relight-panel" id="relightPanel">
@@ -205,7 +206,7 @@
         <span class="icon"><i class="fas fa-chevron-right"></i></span>
       </button>
     </div>
-    <div class="figure-frame"><img id="envImg" src="./static/image/envgrid/page1.webp?v=3" alt="Environment relighting grid"></div>
+    <div class="figure-frame"><img id="envImg" src="./static/image/envgrid/page1.webp?v=4" alt="Environment relighting grid"></div>
   </div>
 
   <!-- ===================== Dynamic scenes ===================== -->
@@ -238,7 +239,7 @@
     <li>A quarter-wave plate on the lens trades <em>S</em><sub>2</sub> for <em>S</em><sub>3</sub>, making circular polarization measurable.</li>
     <li>Per channel: unpolarized = <em>S</em><sub>0</sub>&minus;<em>S</em><sub>1</sub>, LP = &minus;<em>S</em><sub>1</sub>, CP = <em>S</em><sub>3</sub>/<em>S</em><sub>0</sub>.</li>
   </ul>
-  <div class="figure-frame"><img src="./static/image/imaging_system.webp?v=3" alt="Display-camera imaging system"></div>
+  <div class="figure-frame"><img src="./static/image/imaging_system.webp?v=4" alt="Display-camera imaging system"></div>
 
   <!-- ===================== Method ===================== -->
   <h2>Feed-forward inverse rendering</h2>
@@ -247,7 +248,7 @@
     <li>Attention alternates over space, spectral channel, polarization state and frames.</li>
     <li>One forward pass &rarr; normal, albedo, roughness, metallicity.</li>
   </ul>
-  <div class="figure-frame"><img src="./static/image/overview.webp?v=3" alt="Network overview"></div>
+  <div class="figure-frame"><img src="./static/image/overview.webp?v=4" alt="Network overview"></div>
 
   <!-- ===================== Dataset ===================== -->
   <h2>Expanded pBRDF dataset</h2>
@@ -258,10 +259,10 @@
   </ul>
   <div class="columns is-centered">
     <div class="column is-three-fifths">
-      <div class="figure-frame"><img src="./static/image/expand_data.webp?v=3" alt="pBRDF expansion pipeline"></div>
+      <div class="figure-frame"><img src="./static/image/expand_data.webp?v=4" alt="pBRDF expansion pipeline"></div>
     </div>
   </div>
-  <div class="figure-frame"><img src="./static/image/pbrdf_expansion.webp?v=3" alt="Synthesized pBRDF instances"></div>
+  <div class="figure-frame"><img src="./static/image/pbrdf_expansion.webp?v=4" alt="Synthesized pBRDF instances"></div>
 
   <!-- ===================== Citation ===================== -->
   <h2 id="citation">Citation</h2>

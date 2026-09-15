@@ -41,8 +41,9 @@ def parse_args():
     p.add_argument("--out-dir", type=str, default="results")
     p.add_argument("--image-size", type=int, default=384)
     p.add_argument("--canonical-resolution", type=int, default=192)
-    p.add_argument("--patch-size", type=int, default=512,
-                   help="Spatial tile size for full-image inference.")
+    p.add_argument("--patch-size", type=int, default=None,
+                   help="Spatial tile size for full-image inference. Must divide "
+                        "--image-size; defaults to processing the image in one tile.")
     p.add_argument("--pixel-samples", type=int, default=2048)
     p.add_argument("--network-depth", type=int, default=4)
     p.add_argument("--pattern-type", choices=["RGBbin0", "RGBbin1"], default="RGBbin0")
@@ -57,7 +58,14 @@ def parse_args():
                    help="RGB cross-talk calibration; must match training. 1.0 disables it.")
     p.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
     p.add_argument("--limit", type=int, default=None, help="Only run the first N scenes.")
-    return p.parse_args()
+    args = p.parse_args()
+
+    if args.patch_size is None:
+        args.patch_size = args.image_size
+    elif args.image_size % args.patch_size:
+        p.error(f"--image-size ({args.image_size}) must be a multiple of "
+                f"--patch-size ({args.patch_size})")
+    return args
 
 
 def load_net(args) -> Net:

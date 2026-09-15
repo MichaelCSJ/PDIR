@@ -4,9 +4,14 @@ __pycache__/
 *.egg-info/
 .venv/
 
+# Downloaded assets (see README: pretrained weights and sample scenes)
+checkpoints/
+sample_data/
+
 # Run artifacts
 outputs/
 results/
+relight/
 checkpoint/
 *.ckpt
 *.pth

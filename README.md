@@ -43,6 +43,38 @@ pip install -r requirements.txt
 
 The code was developed against PyTorch 2.4 / CUDA 12.4 on NVIDIA A6000 GPUs.
 
+## Quick start
+
+Pretrained weights and five sample captures are published separately, because
+the checkpoint is 329 MB:
+
+```bash
+python download_assets.py
+```
+
+That fills two gitignored directories:
+
+```
+checkpoints/pdir_best.ckpt
+sample_data/{cat,bowl,case,foil,owl}/
+    mask.png
+    quad{0,1,2,3}_main_hdr_{s0,s1,s2}.npy
+```
+
+The sample directories hold exactly what the network reads: the four per-quadrant
+Stokes captures and the object mask. Then:
+
+```bash
+python inference.py --ckpt checkpoints/pdir_best.ckpt \
+    --dataset real --data-root sample_data --out-dir results \
+    --exposure-norm p95_0.95
+
+python render_relight.py --maps-dir results --out-dir relight
+```
+
+`--exposure-norm p95_0.95` matters: it is what `pdir_best` was trained with, and
+inference has to match (see [Inference](#inference)).
+
 ## Data layout
 
 Two loaders are provided. Both hand the network raw per-quadrant Stokes
@@ -174,6 +206,7 @@ play.
 ## Repository layout
 
 ```
+download_assets.py          fetches the weights and sample captures
 train.py                    training entrypoint
 inference.py                inference entrypoint
 render_relight.py           rotating-light relighting of the estimated maps

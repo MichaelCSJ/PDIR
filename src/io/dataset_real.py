@@ -95,10 +95,9 @@ class RealDataset(Dataset):
             if self.data_root is None:
                 raise ValueError("RealDataset requires either `data_root` (single) "
                                  "or `split_file` + `data_roots` (multi).")
-            scene_dirs = sorted(
-                p for p in self.data_root.iterdir()
-                if p.is_dir() and p.name.startswith("scene")
-            )
+            # Any directory holding the required files counts as a scene, so
+            # readable names such as `cat/` work as well as `scene29_.../`.
+            scene_dirs = sorted(p for p in self.data_root.iterdir() if p.is_dir())
             if scene_ids_path is not None and Path(scene_ids_path).is_file():
                 wanted = {ln.strip() for ln in Path(scene_ids_path).read_text().splitlines() if ln.strip()}
                 scene_dirs = [p for p in scene_dirs if p.name in wanted]

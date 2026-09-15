@@ -1,0 +1,12 @@
+# Versions below are the ones this code was developed and tested against
+# (Python 3.10, CUDA 12.4). Newer minor versions generally work.
+torch==2.4.0
+torchvision==0.19.0
+pytorch-lightning==2.5.1
+torchmetrics==1.7.3
+numpy==2.2.6
+scipy==1.15.3
+einops==0.8.1
+opencv-python==4.10.0.84
+Pillow==11.2.1
+PyWavelets==1.8.0

@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+
+# Run artifacts
+outputs/
+results/
+checkpoint/
+*.ckpt
+*.pth
+
+# OS / NAS junk
+.DS_Store
+Thumbs.db
+@eaDir/
+*@SynoEAStream
+
+# Editors
+.vscode/
+.idea/

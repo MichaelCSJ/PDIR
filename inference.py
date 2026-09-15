@@ -46,6 +46,15 @@ def parse_args():
     p.add_argument("--pixel-samples", type=int, default=2048)
     p.add_argument("--network-depth", type=int, default=4)
     p.add_argument("--pattern-type", choices=["RGBbin0", "RGBbin1"], default="RGBbin0")
+    p.add_argument("--exposure-norm", default=None,
+                   choices=["p95_0.95", "p99_0.95", "mean_0.4", "median_0.4",
+                            "max_0.99", "reinhard_0.18"],
+                   help="Per-scene HDR exposure normalisation for real captures. "
+                        "Must match what the checkpoint was trained with.")
+    p.add_argument("--exposure-norm-clamp", type=float, nargs=2, default=(0.5, 4.0),
+                   metavar=("LO", "HI"))
+    p.add_argument("--pattern-color-strength", type=float, default=1.0,
+                   help="RGB cross-talk calibration; must match training. 1.0 disables it.")
     p.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
     p.add_argument("--limit", type=int, default=None, help="Only run the first N scenes.")
     return p.parse_args()
@@ -58,6 +67,7 @@ def load_net(args) -> Net:
         network_depth=args.network_depth,
         pattern_type=args.pattern_type,
         add_noise=False,          # never inject synthetic noise at inference time
+        pattern_color_strength=args.pattern_color_strength,
     )
 
     obj = torch.load(args.ckpt, map_location="cpu", weights_only=False)
@@ -83,7 +93,11 @@ def load_net(args) -> Net:
 def build_dataset(args):
     common = dict(data_root=args.data_root, image_size=args.image_size,
                   mode="all", split_file=args.split_file)
-    return RealDataset(**common) if args.dataset == "real" else SynthDataset(**common)
+    if args.dataset == "synth":
+        return SynthDataset(**common)
+    return RealDataset(exposure_norm=args.exposure_norm,
+                       exposure_norm_clamp=tuple(args.exposure_norm_clamp),
+                       **common)
 
 
 def save_png(path: Path, array: np.ndarray) -> None:
@@ -128,14 +142,19 @@ def main():
         maps = {k: out[k].to(torch.float32)[0].permute(1, 2, 0).cpu().numpy()
                 for k in ("normal", "albedo", "roughness", "metallic")}
 
+        # The network predicts everywhere; only the masked region is meaningful.
+        fg = mask.to(torch.float32)[0, 0, :, :, 0].cpu().numpy()[..., None]
+        maps = {k: v * fg for k, v in maps.items()}
+
         scene_dir = out_root / scene
         scene_dir.mkdir(parents=True, exist_ok=True)
-        # Normals live in [-1,1]; the other maps are already in [0,1].
+        # Normals live in [-1,1]. Remapping after masking puts the background at
+        # 0.5, the usual neutral grey of a normal map.
         save_png(scene_dir / "normal.png", maps["normal"] * 0.5 + 0.5)
         save_png(scene_dir / "albedo.png", maps["albedo"])
         save_png(scene_dir / "roughness.png", maps["roughness"])
         save_png(scene_dir / "metallic.png", maps["metallic"])
-        np.savez_compressed(scene_dir / "maps.npz", **maps)
+        np.savez_compressed(scene_dir / "maps.npz", mask=fg[..., 0], **maps)
 
         print(f"[{i + 1}/{n}] {scene}", flush=True)
 

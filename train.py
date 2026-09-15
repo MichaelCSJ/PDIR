@@ -60,6 +60,13 @@ def parse_args():
     d.add_argument("--real-split-val", type=str, default=None)
     d.add_argument("--val-stride", type=int, default=10,
                    help="Without split files, every Nth scene goes to validation.")
+    d.add_argument("--exposure-norm", default=None,
+                   choices=["p95_0.95", "p99_0.95", "mean_0.4", "median_0.4",
+                            "max_0.99", "reinhard_0.18"],
+                   help="Per-scene HDR exposure normalisation for real captures. "
+                        "Inference must use the same value.")
+    d.add_argument("--exposure-norm-clamp", type=float, nargs=2, default=(0.5, 4.0),
+                   metavar=("LO", "HI"))
     d.add_argument("--image-size", type=int, default=384)
     d.add_argument("--num-workers", type=int, default=2)
     d.add_argument("--batch-size", type=int, default=1)
@@ -185,7 +192,9 @@ def build_datasets(args):
 
     if args.dataset in ("real", "joint"):
         common = dict(data_root=args.real_root, image_size=args.image_size,
-                      val_stride=args.val_stride)
+                      val_stride=args.val_stride,
+                      exposure_norm=args.exposure_norm,
+                      exposure_norm_clamp=tuple(args.exposure_norm_clamp))
         real_train = RealDataset(mode="Train", split_file=args.real_split_train, **common)
         real_val = RealDataset(mode="Val", split_file=args.real_split_val, **common)
         print(f"[data] real  train={len(real_train)} val={len(real_val)}")

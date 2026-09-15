@@ -94,7 +94,7 @@
     });
   }
 
-  var ASSET_V = '?v=13';
+  var ASSET_V = '?v=14';
 
   var SCENES = [
     { label: 'Cat', key: 'scene29' },
@@ -121,7 +121,7 @@
       target: 'envImg',
       axes: [
         { tabs: 'envObjTabs', labels: ['Set 1', 'Set 2', 'Set 3'] },
-        { tabs: 'envLightTabs', labels: ['Set 1', 'Set 2', 'Set 3'] }
+        { tabs: 'envLightTabs', labels: ['Set 1', 'Set 2', 'Set 3', 'Set 4'] }
       ],
       src: function (o, l) {
         return './static/image/envgrid/o' + (o + 1) + '_l' + (l + 1) + '.webp' + ASSET_V;

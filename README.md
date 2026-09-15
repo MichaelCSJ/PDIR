@@ -43,7 +43,7 @@ file under the same name.
 |---|---|
 | `image/results/<scene>_pbr.webp` | methods down the rows, modalities across; column 0 is each method's own preprocessed input, exposed to a common foreground mean so the column is comparable &mdash; ours is solved in the linear HDR domain before the gamma, and estimated maps are untouched. Fixed source height (888 px), width follows the object; the page pins one displayed height for every scene and lets the figure run wider than the text column so the flattest object still fits |
 | `image/results/<scene>_relight.webp` | `PDIR/outputs/render_12pat_5method_bright_crop`, pattern `AntiDiag` |
-| `image/envgrid/o{1..3}_l{1..3}.webp` | 12 objects x 15 environments as nine 4x5 grids, object set and lighting set chosen independently on the page. `fg_gain=2.7`, background through `make_perspective_bg` at 65 deg rather than the module's default panoramic crop, mirror ball top-right from `render_env_3scene_5method_xflip/_chromeballs` |
+| `image/envgrid/o{1..3}_l{1..3}.webp` | 12 objects x 20 environments as twelve 4x5 grids, object set and lighting set chosen independently on the page. `fg_gain=2.7` (Shanghai Bund at exposure 0.5, it tone-maps far brighter than the rest), background through `make_perspective_bg` at 65 deg rather than the module's default panoramic crop, mirror ball top-right from `render_env_3scene_5method_xflip/_chromeballs` |
 | `video/dynamic_{capture,relit}.mp4` | `outputs/face_pipeline_scene4_20260914_vanila/_videos_realtime_capturefps`, re-encoded from MPEG-4 to H.264 so browsers can play them |
 | `webgl/<scene>_{albedo,normal,mat}.png` | `pipeline_vanila_valid_final` maps; `mat` packs roughness, metallicity and mask into R, G, B |
 

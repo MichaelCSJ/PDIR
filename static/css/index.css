@@ -406,6 +406,9 @@ table.res-table.narrow { min-width: 480px; }
   max-width: 800px;
   margin: 0 auto;
 }
+/* Bulma's `.content figure:not(:first-child)` adds a 2em top margin, which
+   drops the second clip below the first. Matching its specificity wins. */
+.content .video-pair figure,
 .video-pair figure {
   margin: 0;
 }

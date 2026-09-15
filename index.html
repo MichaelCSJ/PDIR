@@ -11,13 +11,13 @@
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
         rel="stylesheet">
 
-  <link rel="stylesheet" href="./static/css/bulma.min.css?v=5">
+  <link rel="stylesheet" href="./static/css/bulma.min.css?v=6">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-  <link rel="stylesheet" href="./static/css/index.css?v=5">
+  <link rel="stylesheet" href="./static/css/index.css?v=6">
 
-  <script defer src="./static/js/fontawesome.all.min.js?v=5"></script>
-  <script defer src="./static/js/index.js?v=5"></script>
-  <script defer src="./static/js/relight.js?v=5"></script>
+  <script defer src="./static/js/fontawesome.all.min.js?v=6"></script>
+  <script defer src="./static/js/index.js?v=6"></script>
+  <script defer src="./static/js/relight.js?v=6"></script>
 </head>
 <body>
 
@@ -84,12 +84,16 @@
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="hero-body">
-      <p class="tldr">
-        We present a feed-forward inverse rendering method that works from a snapshot input.
-        On a display setup it combines color multiplexing with polarization imaging built on
-        measured reflectance data.
-      </p>
-      <div class="figure-frame"><img src="./static/image/teaser.webp?v=5" alt="Teaser"></div>
+      <div class="tldr">
+        <span class="tldr-tag">TL;DR</span>
+        <p>
+          We present a <strong>feed-forward inverse rendering</strong> method that works from a
+          <strong>snapshot input</strong>. On a display setup it combines <strong>color
+          multiplexing</strong> with <strong>polarization imaging</strong> built on measured
+          reflectance data.
+        </p>
+      </div>
+      <div class="figure-frame"><img src="./static/image/teaser.webp?v=6" alt="Teaser"></div>
     </div>
   </div>
 </section>
@@ -113,64 +117,14 @@
     </div>
 
     <p class="panel-title">Estimated PBR maps</p>
-    <div class="figure-frame pbr-frame"><img id="resPbr" src="./static/image/results/scene29_pbr.webp?v=5" alt="Estimated PBR maps"></div>
+    <div class="figure-frame pbr-frame"><img id="resPbr" src="./static/image/results/scene29_pbr.webp?v=6" alt="Estimated PBR maps"></div>
 
     <p class="panel-title">Relighting under a held-out display pattern</p>
-    <div class="figure-frame"><img id="resRelight" src="./static/image/results/scene29_relight.webp?v=5" alt="Relighting comparison"></div>
+    <div class="figure-frame"><img id="resRelight" src="./static/image/results/scene29_relight.webp?v=6" alt="Relighting comparison"></div>
   </div>
-
-  <h3 class="table-heading">Synthetic benchmark</h3>
-  <div class="res-table-container">
-    <table class="res-table" id="synthTable">
-      <thead>
-        <tr>
-          <th>Method</th>
-          <th data-dir="higher">Albedo PSNR &uarr;</th>
-          <th data-dir="lower">Albedo LPIPS &darr;</th>
-          <th data-dir="lower">Roughness RMSE &darr;</th>
-          <th data-dir="lower">Metallicity RMSE &darr;</th>
-          <th data-dir="lower">Normal MAE &darr;</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>DiffusionRenderer</td><td class="num">13.03</td><td class="num">0.4039</td><td class="num">0.6999</td><td class="num">0.6317</td><td class="num">29.73</td></tr>
-        <tr><td>RGB-X</td><td class="num">4.75</td><td class="num">0.4884</td><td class="num">0.3596</td><td class="num">0.5529</td><td class="num">40.47</td></tr>
-        <tr><td>LINO-PBR (<i>N</i> = 1)</td><td class="num">14.80</td><td class="num">0.4446</td><td class="num">0.6658</td><td class="num">0.6476</td><td class="num">35.64</td></tr>
-        <tr class="ours"><td>Ours</td><td class="num">23.90</td><td class="num">0.1788</td><td class="num">0.0781</td><td class="num">0.2395</td><td class="num">11.45</td></tr>
-        <tr class="sep"><td>LINO-PBR (<i>N</i> = 4)<sup>&dagger;</sup></td><td class="num">15.60</td><td class="num">0.3708</td><td class="num">0.3746</td><td class="num">0.5843</td><td class="num">18.23</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h3 class="table-heading">Real captures &mdash; re-rendering accuracy</h3>
-  <div class="res-table-container">
-    <table class="res-table narrow" id="realTable">
-      <thead>
-        <tr>
-          <th>Method</th>
-          <th data-dir="higher">si-PSNR &uarr;</th>
-          <th data-dir="lower">si-LPIPS &darr;</th>
-          <th data-dir="lower">si-RMSE &darr;</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>DiffusionRenderer</td><td class="num">16.31</td><td class="num">0.2729</td><td class="num">0.1652</td></tr>
-        <tr><td>RGB-X</td><td class="num">12.75</td><td class="num">0.4121</td><td class="num">0.2428</td></tr>
-        <tr><td>LINO-PBR (<i>N</i> = 1)</td><td class="num">19.16</td><td class="num">0.1949</td><td class="num">0.1220</td></tr>
-        <tr class="ours"><td>Ours</td><td class="num">20.15</td><td class="num">0.1690</td><td class="num">0.1050</td></tr>
-        <tr class="sep"><td>LINO-PBR (<i>N</i> = 4)<sup>&dagger;</sup></td><td class="num">19.18</td><td class="num">0.1493</td><td class="num">0.1223</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <p class="caption has-text-centered"><sup>&dagger;</sup>Four-shot input, for reference.</p>
 
   <!-- ===================== Interactive relighting ===================== -->
   <h2>Move the light</h2>
-  <ul class="tight">
-    <li>Shaded live in your browser from the estimated maps &mdash; drag the image or the slider.</li>
-    <li>Same point-light orbit and BRDF as our offline renderer, plus a dim camera-side fill.</li>
-  </ul>
-
   <div class="relight-panel" id="relightPanel">
     <div class="scene-tabs" id="relightTabs"></div>
     <div class="relight-stage">
@@ -184,10 +138,6 @@
 
   <!-- ===================== Environment lighting ===================== -->
   <h2>Environment lighting</h2>
-  <ul class="tight">
-    <li>Rows are objects, columns are environments; the mirror ball shows the incident light.</li>
-  </ul>
-
   <div class="scene-viewer" id="envViewer">
     <div class="scene-bar">
       <button class="scene-arrow" id="envPrev" aria-label="Previous set">
@@ -198,14 +148,11 @@
         <span class="icon"><i class="fas fa-chevron-right"></i></span>
       </button>
     </div>
-    <div class="figure-frame"><img id="envImg" src="./static/image/envgrid/page1.webp?v=5" alt="Environment relighting grid"></div>
+    <div class="figure-frame"><img id="envImg" src="./static/image/envgrid/page1.webp?v=6" alt="Environment relighting grid"></div>
   </div>
 
   <!-- ===================== Dynamic scenes ===================== -->
   <h2>Dynamic scenes</h2>
-  <ul class="tight">
-    <li>Every frame is reconstructed independently &mdash; no temporal alignment.</li>
-  </ul>
   <div class="placeholder-slot">Video coming soon</div>
 
   <!-- ===================== Imaging system ===================== -->
@@ -216,7 +163,7 @@
     <li>A quarter-wave plate on the lens trades <em>S</em><sub>2</sub> for <em>S</em><sub>3</sub>, making circular polarization measurable.</li>
     <li>Per channel: unpolarized = <em>S</em><sub>0</sub>&minus;<em>S</em><sub>1</sub>, LP = &minus;<em>S</em><sub>1</sub>, CP = <em>S</em><sub>3</sub>/<em>S</em><sub>0</sub>.</li>
   </ul>
-  <div class="figure-frame"><img src="./static/image/imaging_system.webp?v=5" alt="Display-camera imaging system"></div>
+  <div class="figure-frame"><img src="./static/image/imaging_system.webp?v=6" alt="Display-camera imaging system"></div>
 
   <!-- ===================== Method ===================== -->
   <h2>Feed-forward inverse rendering</h2>
@@ -225,7 +172,7 @@
     <li>Attention alternates over space, spectral channel, polarization state and frames.</li>
     <li>One forward pass &rarr; normal, albedo, roughness, metallicity.</li>
   </ul>
-  <div class="figure-frame"><img src="./static/image/overview.webp?v=5" alt="Network overview"></div>
+  <div class="figure-frame"><img src="./static/image/overview.webp?v=6" alt="Network overview"></div>
 
   <!-- ===================== Dataset ===================== -->
   <h2>Expanded pBRDF dataset</h2>
@@ -236,10 +183,10 @@
   </ul>
   <div class="columns is-centered">
     <div class="column is-three-fifths">
-      <div class="figure-frame"><img src="./static/image/expand_data.webp?v=5" alt="pBRDF expansion pipeline"></div>
+      <div class="figure-frame"><img src="./static/image/expand_data.webp?v=6" alt="pBRDF expansion pipeline"></div>
     </div>
   </div>
-  <div class="figure-frame"><img src="./static/image/pbrdf_expansion.webp?v=5" alt="Synthesized pBRDF instances"></div>
+  <div class="figure-frame"><img src="./static/image/pbrdf_expansion.webp?v=6" alt="Synthesized pBRDF instances"></div>
 
   <!-- ===================== Citation ===================== -->
   <h2 id="citation">Citation</h2>

@@ -8,6 +8,8 @@
 (function () {
   'use strict';
 
+  var ASSET_V = '?v=3';
+
   var SCENES = [
     { label: 'Cat', key: 'scene29' },
     { label: 'Bowl', key: 'scene41' },
@@ -157,6 +159,11 @@
     var uFill = gl.getUniformLocation(program, 'u_fill');
 
     var angleEl = document.getElementById('relightAngle');
+    if (!angleEl) {                       // markup and script out of step
+      console.error('relight: #relightAngle missing');
+      if (fallback) fallback.hidden = false;
+      return;
+    }
     var el = ELEVATION_DEG * Math.PI / 180;
     var cosEl = Math.cos(el);
     var sinEl = Math.max(Math.sin(el), 0.05);
@@ -179,7 +186,7 @@
           gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
           draw();
         };
-        img.src = './static/webgl/' + key + '_' + name + '.png';
+        img.src = './static/webgl/' + key + '_' + name + '.png' + ASSET_V;
       });
     }
 

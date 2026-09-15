@@ -11,13 +11,13 @@
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
         rel="stylesheet">
 
-  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma.min.css?v=3">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="stylesheet" href="./static/css/index.css?v=3">
 
-  <script defer src="./static/js/fontawesome.all.min.js"></script>
-  <script defer src="./static/js/index.js"></script>
-  <script defer src="./static/js/relight.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js?v=3"></script>
+  <script defer src="./static/js/index.js?v=3"></script>
+  <script defer src="./static/js/relight.js?v=3"></script>
 </head>
 <body>
 
@@ -84,7 +84,7 @@
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="hero-body">
-      <div class="figure-frame"><img src="./static/image/teaser.webp" alt="Teaser"></div>
+      <div class="figure-frame"><img src="./static/image/teaser.webp?v=3" alt="Teaser"></div>
     </div>
   </div>
 </section>
@@ -120,18 +120,11 @@
       </button>
     </div>
 
-    <div class="input-row">
-      <div class="input-shot">
-        <img id="resInput" src="./static/image/results/scene29_input.webp" alt="Snapshot input">
-      </div>
-      <p class="panel-title">Snapshot input &mdash; one exposure under the RGB binary pattern</p>
-    </div>
-
     <p class="panel-title">Estimated PBR maps</p>
-    <div class="figure-frame"><img id="resPbr" src="./static/image/results/scene29_pbr.webp" alt="Estimated PBR maps"></div>
+    <div class="figure-frame"><img id="resPbr" src="./static/image/results/scene29_pbr.webp?v=3" alt="Estimated PBR maps"></div>
 
     <p class="panel-title">Relighting under a held-out display pattern</p>
-    <div class="figure-frame"><img id="resRelight" src="./static/image/results/scene29_relight.webp" alt="Relighting comparison"></div>
+    <div class="figure-frame"><img id="resRelight" src="./static/image/results/scene29_relight.webp?v=3" alt="Relighting comparison"></div>
   </div>
 
   <h3 class="table-heading">Synthetic benchmark</h3>
@@ -212,7 +205,7 @@
         <span class="icon"><i class="fas fa-chevron-right"></i></span>
       </button>
     </div>
-    <div class="figure-frame"><img id="envImg" src="./static/image/envgrid/page1.webp" alt="Environment relighting grid"></div>
+    <div class="figure-frame"><img id="envImg" src="./static/image/envgrid/page1.webp?v=3" alt="Environment relighting grid"></div>
   </div>
 
   <!-- ===================== Dynamic scenes ===================== -->
@@ -245,7 +238,7 @@
     <li>A quarter-wave plate on the lens trades <em>S</em><sub>2</sub> for <em>S</em><sub>3</sub>, making circular polarization measurable.</li>
     <li>Per channel: unpolarized = <em>S</em><sub>0</sub>&minus;<em>S</em><sub>1</sub>, LP = &minus;<em>S</em><sub>1</sub>, CP = <em>S</em><sub>3</sub>/<em>S</em><sub>0</sub>.</li>
   </ul>
-  <div class="figure-frame"><img src="./static/image/imaging_system.webp" alt="Display-camera imaging system"></div>
+  <div class="figure-frame"><img src="./static/image/imaging_system.webp?v=3" alt="Display-camera imaging system"></div>
 
   <!-- ===================== Method ===================== -->
   <h2>Feed-forward inverse rendering</h2>
@@ -254,7 +247,7 @@
     <li>Attention alternates over space, spectral channel, polarization state and frames.</li>
     <li>One forward pass &rarr; normal, albedo, roughness, metallicity.</li>
   </ul>
-  <div class="figure-frame"><img src="./static/image/overview.webp" alt="Network overview"></div>
+  <div class="figure-frame"><img src="./static/image/overview.webp?v=3" alt="Network overview"></div>
 
   <!-- ===================== Dataset ===================== -->
   <h2>Expanded pBRDF dataset</h2>
@@ -265,10 +258,10 @@
   </ul>
   <div class="columns is-centered">
     <div class="column is-three-fifths">
-      <div class="figure-frame"><img src="./static/image/expand_data.webp" alt="pBRDF expansion pipeline"></div>
+      <div class="figure-frame"><img src="./static/image/expand_data.webp?v=3" alt="pBRDF expansion pipeline"></div>
     </div>
   </div>
-  <div class="figure-frame"><img src="./static/image/pbrdf_expansion.webp" alt="Synthesized pBRDF instances"></div>
+  <div class="figure-frame"><img src="./static/image/pbrdf_expansion.webp?v=3" alt="Synthesized pBRDF instances"></div>
 
   <!-- ===================== Citation ===================== -->
   <h2 id="citation">Citation</h2>

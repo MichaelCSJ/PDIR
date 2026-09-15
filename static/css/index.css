@@ -292,14 +292,14 @@ table.res-table.narrow { min-width: 480px; }
   font-size: 12.5px;
   letter-spacing: 0.02em;
   color: #6b7280;
-  text-align: right;
+  text-align: center;
   border-bottom: 1px solid #d7dbe0;
 }
 .res-table th:first-child { text-align: left; }
 
 .res-table td { border-bottom: 1px solid #f0f2f4; color: #2b3038; }
 .res-table tbody tr:last-child td { border-bottom: none; }
-.res-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.res-table td.num { text-align: center; font-variant-numeric: tabular-nums; }
 
 .res-table tbody tr.ours td {
   background: #fff8e6;
@@ -369,27 +369,4 @@ table.res-table.narrow { min-width: 480px; }
   font-size: 14px;
   text-align: center;
   padding: 72px 16px;
-}
-
-/* ------------------------- snapshot input row ------------------------- */
-
-.input-row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin: 10px 0 4px;
-}
-.input-row .panel-title { margin: 0; }
-.input-shot {
-  flex: none;
-  border: 1px solid #eaecef;
-  border-radius: 6px;
-  background: #000;
-  padding: 4px;
-}
-.input-shot img {
-  display: block;
-  height: 104px;
-  width: auto;
-  border-radius: 3px;
 }

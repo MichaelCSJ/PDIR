@@ -66,6 +66,8 @@
     });
   }
 
+  var ASSET_V = '?v=3';
+
   var SCENES = [
     { label: 'Cat', key: 'scene29' },
     { label: 'Bowl', key: 'scene41' },
@@ -76,13 +78,12 @@
   document.addEventListener('DOMContentLoaded', function () {
     makeViewer({
       tabs: 'resTabs', prev: 'resPrev', next: 'resNext',
-      targets: { input: 'resInput', pbr: 'resPbr', relight: 'resRelight' },
+      targets: { pbr: 'resPbr', relight: 'resRelight' },
       items: SCENES.map(function (s) {
         return {
           label: s.label,
-          input: './static/image/results/' + s.key + '_input.webp',
-          pbr: './static/image/results/' + s.key + '_pbr.webp',
-          relight: './static/image/results/' + s.key + '_relight.webp'
+          pbr: './static/image/results/' + s.key + '_pbr.webp' + ASSET_V,
+          relight: './static/image/results/' + s.key + '_relight.webp' + ASSET_V
         };
       })
     });

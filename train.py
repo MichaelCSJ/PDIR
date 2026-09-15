@@ -80,8 +80,11 @@ def parse_args():
     m.add_argument("--add-noise", action="store_true", default=True,
                    help="Apply the calibrated sensor noise model to the simulated input.")
     m.add_argument("--no-add-noise", dest="add_noise", action="store_false")
-    m.add_argument("--pattern-color-strength", type=float, default=0.80,
-                   help="RGB cross-talk calibration; 1.0 disables it.")
+    m.add_argument("--pattern-color-strength", type=float, default=1.0,
+                   help="RGB cross-talk calibration. 1.0 leaves the simulated "
+                        "pattern untouched and is what the released checkpoint "
+                        "was trained with; 0.80 is the value calibrated against "
+                        "the real captures. Inference must use the same value.")
     m.add_argument("--init-ckpt", type=str, default=None,
                    help="Checkpoint to initialise from. Defaults to the pretrained LINO-PBR weights.")
     m.add_argument("--no-pretrained", action="store_true",

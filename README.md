@@ -144,9 +144,9 @@ Things worth knowing before a long run:
 - Unless you pass `--no-pretrained`, training initialises from the LINO-PBR
   weights, downloaded once into `checkpoints/`. Use `--init-ckpt` to start from
   your own checkpoint instead.
-- `--pattern-color-strength` defaults to 0.80, the calibrated value. The
-  released `pdir_best` was trained at 1.0, so pass that to reproduce it &mdash;
-  and match whatever you choose at inference time.
+- `--pattern-color-strength` defaults to 1.0, which is what the released
+  `pdir_best` was trained with. 0.80 is the value calibrated against the real
+  captures; whichever you train with, pass the same one at inference time.
 - The real loss ramps in as a staircase: zero for the first
   `--real-warmup-stair-steps` steps, then one step up per block until it reaches
   full weight after `--real-warmup-stairs` blocks. While the weight is zero the

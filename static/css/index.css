@@ -20,7 +20,9 @@ body {
 
 .teaser .hero-body {
   padding-top: 0;
-  padding-bottom: 3rem;
+  /* the abstract follows straight after the teaser, with no heading between
+     them, so keep the two visually attached */
+  padding-bottom: 1rem;
 }
 
 .teaser {

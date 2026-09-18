@@ -480,111 +480,71 @@ table.res-table.narrow { min-width: 480px; }
 /* ---------------------- pBRDF sample browser ---------------------- */
 
 .pbrdf-viewer {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 260px;
-  gap: 18px;
-  align-items: center;
   border: 1px solid #eaecef;
   border-radius: 8px;
   padding: 14px;
   background: #fff;
 }
+.pbrdf-viewer .scene-tabs { margin-bottom: 10px; }
+.pbrdf-viewer .caption { text-align: center; margin-top: 10px; }
 
+/* the renders are 680x704, all registered to the same frame */
 .pbrdf-stage {
-  display: flex;
-  justify-content: center;
-}
-.pbrdf-stage img {
-  display: block;
-  width: auto;
-  height: min(420px, 46vw);
-  border-radius: 6px;
-}
-
-.pbrdf-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.pad-wrap {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 8px;
-  align-items: stretch;
-}
-
-/* row captions sit outside the pad so the cells stay square-ish */
-.pad-rows {
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: #6b7280;
-}
-.pad-rows span {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  text-align: right;
-  line-height: 1.15;
-}
-
-.pad {
   position: relative;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 3px;
-  padding: 3px;
-  background: #eef0f3;
-  border-radius: 8px;
-  cursor: grab;
-  touch-action: none;
-}
-.pad:active { cursor: grabbing; }
-.pad:focus-visible { outline: 2px solid #9fb3cc; outline-offset: 2px; }
-
-.pad-cell {
-  border: none;
-  border-radius: 5px;
+  width: min(520px, 100%);
+  aspect-ratio: 680 / 704;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 6px;
   background: #fff;
-  color: #4b5563;
-  font-family: inherit;
-  font-size: 11.5px;
-  font-weight: 600;
-  padding: 12px 2px;
-  cursor: inherit;
-  pointer-events: none;      /* the pad handles the pointer, cells just label */
-}
-.pad-cell.is-active {
-  background: #24292e;
-  color: #fff;
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
 }
 
-.pad-handle {
+.pbrdf-layer {
   position: absolute;
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  background: #c9a227;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
-  transform: translate(-50%, -50%);
-  transition: left 0.15s ease, top 0.15s ease;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   pointer-events: none;
 }
 
-.pbrdf-caption {
-  margin: 0;
-  font-size: 12.5px;
-  line-height: 1.5;
-  color: #6b7280;
+.pbrdf-split {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.28);
+  pointer-events: none;
 }
+.pbrdf-split.v { top: 0; width: 2px; height: 100%; transform: translateX(-1px); }
+.pbrdf-split.h { height: 2px; transform: translateY(-1px); }
 
-@media (max-width: 700px) {
-  .pbrdf-viewer { grid-template-columns: 1fr; }
-  .pbrdf-stage img { height: min(380px, 70vw); }
+.pbrdf-handle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: #c9a227;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+  transform: translate(-50%, -50%);
+  cursor: grab;
 }
+.pbrdf-handle:active { cursor: grabbing; }
+.pbrdf-handle:focus-visible { outline: 2px solid #1a73e8; outline-offset: 3px; }
+
+.pbrdf-tag {
+  position: absolute;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(20, 22, 26, 0.72);
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+}
+.pbrdf-tag.tag-0 { left: 10px; top: 10px; }
+.pbrdf-tag.tag-1 { right: 10px; top: 10px; }
+.pbrdf-tag.tag-2 { right: 10px; bottom: 10px; }

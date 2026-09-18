@@ -67,9 +67,13 @@ latitude down its height, so a square frame reads as horizontally squeezed. The
 grids swap in `make_perspective_bg`, a pinhole projection, at a 65 deg vertical
 field of view with the pitch taken from `bg_v_center`.
 
-`static/js/pbrdf.js` drives the sample browser: a 3x2 pad where the columns
-are the channels of a group and the rows are the groups, driven by drag,
-click or arrow keys.
+`static/js/pbrdf.js` drives the sample browser: the three maps of a group are
+stacked in register and one draggable handle splits the frame between them,
+left column / top right / bottom right, so a sphere can be read across every
+attribute at once. The toggle swaps the PBR triple for the polarimetric one.
+Grouping matters for more than meaning: the PBR renders share a white
+background and the polarimetric ones a black background, so a split within a
+group is seamless and one across groups would not be.
 
 `static/js/relight.js` reproduces `Principled_BRDF.forward`: the light circles
 at radius 0.4 about (0, -0.29, 0) while the shaded point sits at (0, 0, 0.5),

@@ -1,102 +1,137 @@
-/* Two-axis pad for browsing the pBRDF sample renders.
+/* Crosshair reveal over the pBRDF sample renders.
 
-   Columns are the three channels of a group, rows are the two groups: PBR
-   appearance on top, polarimetric below. Drag the handle, click a cell, or use
-   the arrow keys; the handle snaps to the nearest cell and the large view
-   follows. All six renders are registered to one frame, so nothing shifts as
-   you move between them. */
+   The three maps of a group are stacked in register and the view is split
+   between them by one draggable handle: everything left of it shows the first
+   map, the top right the second, the bottom right the third. Dragging sweeps
+   the split, so any sphere can be read across all three attributes at once.
+   The group toggle swaps in the polarimetric triple. */
 
 (function () {
   'use strict';
 
-  var ASSET_V = '?v=18';
+  var ASSET_V = '?v=19';
 
   var GROUPS = [
-    { label: 'PBR', cells: [
-      { key: 'rgb', label: 'RGB', note: 'Appearance under unpolarized light' },
-      { key: 'roughness', label: 'Roughness', note: 'Fitted roughness' },
-      { key: 'metallicity', label: 'Metallicity', note: 'Fitted metallicity' }
+    { label: 'PBR', maps: [
+      { key: 'rgb', label: 'RGB' },
+      { key: 'roughness', label: 'Roughness' },
+      { key: 'metallicity', label: 'Metallicity' }
     ] },
-    { label: 'Polarimetric', cells: [
-      { key: 'dop', label: 'DoP', note: 'Degree of polarization' },
-      { key: 'aolp', label: 'AoLP', note: 'Angle of linear polarization' },
-      { key: 'cop', label: 'CoP', note: 'Chirality of polarization' }
+    { label: 'Polarimetric', maps: [
+      { key: 'dop', label: 'DoP' },
+      { key: 'aolp', label: 'AoLP' },
+      { key: 'cop', label: 'CoP' }
     ] }
   ];
 
-  var COLS = GROUPS[0].cells.length;
-  var ROWS = GROUPS.length;
-
   function init() {
-    var pad = document.getElementById('pbrdfPad');
-    var img = document.getElementById('pbrdfImg');
-    var caption = document.getElementById('pbrdfCaption');
-    if (!pad || !img) return;
+    var stage = document.getElementById('pbrdfStage');
+    var tabs = document.getElementById('pbrdfTabs');
+    if (!stage || !tabs) return;
 
-    var col = 0, row = 0;
-    var handle = document.createElement('div');
-    handle.className = 'pad-handle';
+    var x = 50, y = 50;                      // handle position, in percent
+    var group = 0;
 
-    /* one labelled cell per map, laid out by the stylesheet's grid */
-    var cells = [];
-    GROUPS.forEach(function (group, r) {
-      group.cells.forEach(function (cell, c) {
-        var el = document.createElement('button');
-        el.type = 'button';
-        el.className = 'pad-cell';
-        el.textContent = cell.label;
-        el.setAttribute('aria-label', group.label + ' ' + cell.label);
-        el.addEventListener('click', function () { select(c, r); });
-        pad.appendChild(el);
-        cells.push({ el: el, c: c, r: r });
-      });
+    var layers = [0, 1, 2].map(function () {
+      var img = document.createElement('img');
+      img.className = 'pbrdf-layer';
+      img.draggable = false;
+      stage.appendChild(img);
+      return img;
     });
-    pad.appendChild(handle);
+    var tags = [0, 1, 2].map(function (i) {
+      var el = document.createElement('span');
+      el.className = 'pbrdf-tag tag-' + i;
+      stage.appendChild(el);
+      return el;
+    });
 
-    function select(c, r) {
-      col = Math.max(0, Math.min(COLS - 1, c));
-      row = Math.max(0, Math.min(ROWS - 1, r));
-      var cell = GROUPS[row].cells[col];
+    var vline = document.createElement('div');
+    vline.className = 'pbrdf-split v';
+    var hline = document.createElement('div');
+    hline.className = 'pbrdf-split h';
+    var handle = document.createElement('div');
+    handle.className = 'pbrdf-handle';
+    handle.setAttribute('role', 'slider');
+    handle.setAttribute('aria-label', 'Move the split');
+    stage.appendChild(vline);
+    stage.appendChild(hline);
+    stage.appendChild(handle);
 
-      img.src = './static/image/pbrdf/' + cell.key + '.webp' + ASSET_V;
-      img.alt = GROUPS[row].label + ' ' + cell.label;
-      if (caption) {
-        caption.textContent = GROUPS[row].label + ' · ' + cell.label + ' — ' + cell.note;
-      }
+    function layout() {
+      // left column, then the right column halved by the horizontal line
+      layers[0].style.clipPath = 'polygon(0 0, ' + x + '% 0, ' + x + '% 100%, 0 100%)';
+      layers[1].style.clipPath =
+        'polygon(' + x + '% 0, 100% 0, 100% ' + y + '%, ' + x + '% ' + y + '%)';
+      layers[2].style.clipPath =
+        'polygon(' + x + '% ' + y + '%, 100% ' + y + '%, 100% 100%, ' + x + '% 100%)';
 
-      cells.forEach(function (x) {
-        x.el.classList.toggle('is-active', x.c === col && x.r === row);
-      });
-      handle.style.left = ((col + 0.5) / COLS * 100) + '%';
-      handle.style.top = ((row + 0.5) / ROWS * 100) + '%';
+      vline.style.left = x + '%';
+      hline.style.left = x + '%';
+      hline.style.top = y + '%';
+      hline.style.width = (100 - x) + '%';
+      handle.style.left = x + '%';
+      handle.style.top = y + '%';
+
+      // hide a label once its region is too small to hold it
+      tags[0].style.display = x > 16 ? '' : 'none';
+      tags[1].style.display = (100 - x) > 18 && y > 12 ? '' : 'none';
+      tags[2].style.display = (100 - x) > 18 && (100 - y) > 12 ? '' : 'none';
     }
 
-    /* dragging snaps to whichever cell the pointer is over */
-    function pick(ev) {
-      var rect = pad.getBoundingClientRect();
+    function setGroup(g) {
+      group = g;
+      GROUPS[g].maps.forEach(function (m, i) {
+        layers[i].src = './static/image/pbrdf/' + m.key + '.webp' + ASSET_V;
+        layers[i].alt = GROUPS[g].label + ' ' + m.label;
+        tags[i].textContent = m.label;
+      });
+      Array.prototype.forEach.call(tabs.children, function (b, i) {
+        b.classList.toggle('is-active', i === g);
+      });
+      layout();
+    }
+
+    GROUPS.forEach(function (g, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'scene-tab';
+      b.textContent = g.label;
+      b.addEventListener('click', function () { setGroup(i); });
+      tabs.appendChild(b);
+    });
+
+    function move(ev) {
+      var rect = stage.getBoundingClientRect();
       var touch = ev.touches && ev.touches[0];
-      var x = ((touch ? touch.clientX : ev.clientX) - rect.left) / rect.width;
-      var y = ((touch ? touch.clientY : ev.clientY) - rect.top) / rect.height;
-      select(Math.floor(x * COLS), Math.floor(y * ROWS));
+      x = ((touch ? touch.clientX : ev.clientX) - rect.left) / rect.width * 100;
+      y = ((touch ? touch.clientY : ev.clientY) - rect.top) / rect.height * 100;
+      x = Math.max(2, Math.min(98, x));
+      y = Math.max(2, Math.min(98, y));
+      layout();
     }
 
     var dragging = false;
-    pad.addEventListener('mousedown', function (e) { dragging = true; pick(e); });
-    window.addEventListener('mousemove', function (e) { if (dragging) pick(e); });
+    stage.addEventListener('mousedown', function (e) { e.preventDefault(); dragging = true; move(e); });
+    window.addEventListener('mousemove', function (e) { if (dragging) move(e); });
     window.addEventListener('mouseup', function () { dragging = false; });
-    pad.addEventListener('touchstart', function (e) { e.preventDefault(); pick(e); }, { passive: false });
-    pad.addEventListener('touchmove', function (e) { e.preventDefault(); pick(e); }, { passive: false });
+    stage.addEventListener('touchstart', function (e) { e.preventDefault(); move(e); }, { passive: false });
+    stage.addEventListener('touchmove', function (e) { e.preventDefault(); move(e); }, { passive: false });
 
-    pad.tabIndex = 0;
-    pad.addEventListener('keydown', function (e) {
-      var moves = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
+    handle.tabIndex = 0;
+    handle.addEventListener('keydown', function (e) {
+      var step = e.shiftKey ? 10 : 2;
+      var moves = { ArrowLeft: [-step, 0], ArrowRight: [step, 0],
+                    ArrowUp: [0, -step], ArrowDown: [0, step] };
       var m = moves[e.key];
       if (!m) return;
       e.preventDefault();
-      select(col + m[0], row + m[1]);
+      x = Math.max(2, Math.min(98, x + m[0]));
+      y = Math.max(2, Math.min(98, y + m[1]));
+      layout();
     });
 
-    select(0, 0);
+    setGroup(0);
   }
 
   document.addEventListener('DOMContentLoaded', init);

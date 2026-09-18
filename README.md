@@ -45,6 +45,7 @@ file under the same name.
 | `image/results/<scene>_relight.webp` | `PDIR/outputs/render_12pat_5method_bright_crop`, pattern `AntiDiag` |
 | `image/envgrid/o{1..3}_l{1..3}.webp` | 12 objects x 20 environments as twelve 4x5 grids, object set and lighting set chosen independently on the page. `fg_gain=2.7`, per-environment exposure into the Reinhard curve (Bund 0.5, Hall and Garden 2.0, Fireplace and Alley 2.4, the rest 1.0), background through `make_perspective_bg` at 65 deg rather than the module's default panoramic crop, mirror ball top-right from `render_env_3scene_5method_xflip/_chromeballs` |
 | `video/dynamic_{capture,relit}.mp4` | `outputs/face_pipeline_scene4_20260914_vanila/_videos_realtime_capturefps`, re-encoded from MPEG-4 to H.264 so browsers can play them |
+| `image/pbrdf/{rgb,roughness,metallicity,dop,aolp,cop}.webp` | the six sample-cube renders, registered onto one 340x352 frame at 2x. They were exported at different canvas sizes and scales, so each is scaled and shifted by a similarity transform fitted to maximise silhouette IoU against the RGB render (0.98 for the PBR group, 0.99 for the polarimetric one); without that, switching maps makes the spheres jump |
 | `webgl/<scene>_{albedo,normal,mat}.png` | `pipeline_vanila_valid_final` maps; `mat` packs roughness, metallicity and mask into R, G, B |
 
 Per-method sources (`<safe>` = `<prefix>__<scene>`):
@@ -65,6 +66,10 @@ a full 360 deg of longitude across the image width while covering 90 deg of
 latitude down its height, so a square frame reads as horizontally squeezed. The
 grids swap in `make_perspective_bg`, a pinhole projection, at a 65 deg vertical
 field of view with the pitch taken from `bg_v_center`.
+
+`static/js/pbrdf.js` drives the sample browser: a 3x2 pad where the columns
+are the channels of a group and the rows are the groups, driven by drag,
+click or arrow keys.
 
 `static/js/relight.js` reproduces `Principled_BRDF.forward`: the light circles
 at radius 0.4 about (0, -0.29, 0) while the shaded point sits at (0, 0, 0.5),

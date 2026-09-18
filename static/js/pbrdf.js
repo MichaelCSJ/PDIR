@@ -9,7 +9,7 @@
 (function () {
   'use strict';
 
-  var ASSET_V = '?v=19';
+  var ASSET_V = '?v=20';
 
   var GROUPS = [
     { label: 'PBR', maps: [
